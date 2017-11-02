@@ -1,0 +1,94 @@
+html {
+  box-sizing: border-box; }
+
+*, *::before, *::after {
+  box-sizing: inherit; }
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; }
+
+#textContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden; }
+
+.v-rl {
+  writing-mode: vertical-rl; }
+
+#textRevealer {
+  padding: 5vmin 5vmin;
+  font-size: 70vmin;
+  font-family: Roboto, "Noto Sans CJK TC", sans-serif;
+  text-rendering: optimizeLegibility;
+  white-space: pre; }
+
+#textArea {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  font-family: Roboto, "Noto Sans CJK TC", sans-serif;
+  text-align: center;
+  white-space: nowrap; }
+
+@keyframes blink {
+  from {
+    background-color: transparent; }
+  to {
+    background-color: rgba(0, 0, 0, 0.8); } }
+
+.tag.-cursor {
+  position: relative; }
+  .tag.-cursor::before {
+    content: '';
+    padding: 2px 2px;
+    animation: blink 900ms ease-in-out infinite alternate both; }
+
+.tag.-select {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.9); }
+
+.tag.-symbol {
+  font-size: .9em;
+  opacity: .2; }
+
+.tag.-ast, .tag.-ast3 {
+  font-style: italic; }
+
+.tag.-ast2, .tag.-ast3 {
+  font-weight: bold; }
+
+.tag.-ast-start, .tag.-ast-end, .tag.-ast2-start, .tag.-ast2-end, .tag.-ast3-start, .tag.-ast3-end {
+  font-size: .2em; }
+
+.tag.-under {
+  text-decoration: underline; }
+
+.tag.-hyphen {
+  text-decoration: line-through; }
+
+.tag.-tilde {
+  text-decoration: line-through; }
+
+.tag.-dblq, .tag.-zhq {
+  font-family: serif; }
+
+.tag.-grave, .tag.-grave-start, .tag.-grave-end, .tag.-angle, .tag.-angle-start, .tag.-angle-end {
+  font-family: monospace;
+  font-size: inherit;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: none; }
+
+.tag.-grave, .tag.-grave-start, .tag.-grave-end {
+  background-color: rgba(253, 197, 101, 0.2); }
+  .tag.-grave.-select, .tag.-grave-start.-select, .tag.-grave-end.-select {
+    background-color: rgba(246, 183, 99, 0.5);
+    color: #61574c; }
