@@ -1,0 +1,101 @@
+html { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: inherit; }
+
+body {
+  width: 100vw; height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#textContainer {
+  width: 100%; height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+.v-rl {
+  writing-mode: vertical-rl;
+}
+
+$paddingTB: 5vmin;
+$paddingRL: 5vmin;
+$font-size: 70vmin;
+
+#textRevealer {
+  padding: $paddingTB $paddingRL;
+  
+  font-size: $font-size;
+  font-family: Roboto, "Noto Sans CJK TC", sans-serif;
+  text-rendering: optimizeLegibility;
+  white-space: pre;
+}
+
+#textArea {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  font-family: Roboto, "Noto Sans CJK TC", sans-serif;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@keyframes blink {
+  from { background-color: rgba(0, 0, 0, 0); }
+  to { background-color: rgba(0, 0, 0, .8); }
+}
+
+.tag {
+  &.-cursor {
+    position: relative;
+    &::before {
+      content: '';
+      padding: 2px 2px;
+      animation: blink 900ms ease-in-out infinite alternate both;
+    }
+  }
+  &.-select {
+    background-color: rgba(0, 0, 0, .5);
+    color: rgba(255, 255, 255, .9);
+  }
+  
+  &.-symbol {
+    font-size: .9em;
+    opacity: .2;
+  }
+  
+  &.-ast, &.-ast3 { font-style: italic; }
+  &.-ast2, &.-ast3 { font-weight: bold; }
+  &.-ast, &.-ast2, &.-ast3 {
+    &-start, &-end {
+      font-size: .2em;
+    }
+  }
+  
+  &.-under { text-decoration: underline; }
+  &.-hyphen { text-decoration: line-through; }
+  &.-tilde { text-decoration: line-through; }
+  
+  &.-dblq, &.-zhq { font-family: serif; }
+    
+  &.-grave, &.-angle {
+    &, &-start, &-end {
+      font-family: monospace;
+      font-size: inherit;
+      font-style: normal;
+      font-weight: normal;
+      text-decoration: none;
+    }
+  }
+  &.-grave {
+    &, &-start, &-end {
+      background-color: rgba(#fdc565, .2);
+      &.-select {
+        background-color: rgba(#f6b763, .5);
+        color: #61574c;
+      }
+    }
+  }
+}
