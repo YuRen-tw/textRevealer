@@ -78,7 +78,11 @@ $font-size: 70vmin;
   &.-hyphen { text-decoration: line-through; }
   &.-tilde { text-decoration: line-through; }
   
-  &.-dblq, &.-zhq { font-family: serif; }
+  &.-dblq, &.-cjkq {
+    &, &-start, &-end {
+      font-family: serif;
+    }
+  }
     
   &.-grave, &.-angle {
     &, &-start, &-end {
