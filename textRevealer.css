@@ -77,7 +77,7 @@ body {
 .tag.-tilde {
   text-decoration: line-through; }
 
-.tag.-dblq, .tag.-zhq {
+.tag.-dblq, .tag.-dblq-start, .tag.-dblq-end, .tag.-cjkq, .tag.-cjkq-start, .tag.-cjkq-end {
   font-family: serif; }
 
 .tag.-grave, .tag.-grave-start, .tag.-grave-end, .tag.-angle, .tag.-angle-start, .tag.-angle-end {

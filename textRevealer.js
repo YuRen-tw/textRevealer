@@ -16,7 +16,7 @@ const HTMLCLASS = {
   BRACKET: '-bracket',
   BRACE: '-brace',
   ANGLE: '-angle',
-  ZHQUOTE: '-zhq'
+  CJKQUOTE: '-cjkq'
 }
 const SYMBOLOBJ = {
   '*': { inner: '*', length: 1, type: 'ASTERISK', on: 'both' },
@@ -35,10 +35,10 @@ const SYMBOLOBJ = {
   '}': { inner: '}', length: 1, type: 'BRACE', on: 'end' },
   '<': { inner: '<', length: 1, type: 'ANGLE', on: 'start' },
   '>': { inner: '>', length: 1, type: 'ANGLE', on: 'end' },
-  '「': { inner: '「', length: 1, type: 'ZHQUOTE', on: 'start' },
-  '」': { inner: '」', length: 1, type: 'ZHQUOTE', on: 'end' },
-  '『': { inner: '『', length: 1, type: 'ZHQUOTE', on: 'start' },
-  '』': { inner: '』', length: 1, type: 'ZHQUOTE', on: 'end' }
+  '「': { inner: '「', length: 1, type: 'CJKQUOTE', on: 'start' },
+  '」': { inner: '」', length: 1, type: 'CJKQUOTE', on: 'end' },
+  '『': { inner: '『', length: 1, type: 'CJKQUOTE', on: 'start' },
+  '』': { inner: '』', length: 1, type: 'CJKQUOTE', on: 'end' }
 }
 const SYMBOLCHAR = Object.keys(SYMBOLOBJ).join('');
 function charType(char) {
