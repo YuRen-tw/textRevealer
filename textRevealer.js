@@ -19,26 +19,26 @@ const HTMLCLASS = {
   CJKQUOTE: '-cjkq'
 }
 const SYMBOLOBJ = {
-  '*': { inner: '*', length: 1, type: 'ASTERISK', on: 'both' },
-  '**': { inner: '**', length: 2, type: 'ASTERISK_2', on: 'both' },
-  '***': { inner: '***', length: 3, type: 'ASTERISK_3', on: 'both' },
-  '"': { inner: '"', length: 1, type: 'DBLQUOTE', on: 'both' },
-  '`': { inner: '`', length: 1, type: 'GRAVE', on: 'both' },
-  '~~': { inner: '~~', length: 2, type: 'TILDE', on: 'both' },
-  '__': { inner: '__', length: 2, type: 'UNDERSCORE', on: 'both' },
-  '--': { inner: '--', length: 2, type: 'HYPHEN', on: 'both' },
-  '(': { inner: '(', length: 1, type: 'PARENTHESIS', on: 'start' },
-  ')': { inner: ')', length: 1, type: 'PARENTHESIS', on: 'end' },
-  '[': { inner: '[', length: 1, type: 'BRACKET', on: 'start' },
-  ']': { inner: ']', length: 1, type: 'BRACKET', on: 'end' },
-  '{': { inner: '{', length: 1, type: 'BRACE', on: 'start' },
-  '}': { inner: '}', length: 1, type: 'BRACE', on: 'end' },
-  '<': { inner: '<', length: 1, type: 'ANGLE', on: 'start' },
-  '>': { inner: '>', length: 1, type: 'ANGLE', on: 'end' },
-  '「': { inner: '「', length: 1, type: 'CJKQUOTE', on: 'start' },
-  '」': { inner: '」', length: 1, type: 'CJKQUOTE', on: 'end' },
-  '『': { inner: '『', length: 1, type: 'CJKQUOTE', on: 'start' },
-  '』': { inner: '』', length: 1, type: 'CJKQUOTE', on: 'end' }
+  '*': { inner: '*', type: 'ASTERISK', on: 'both' },
+  '**': { inner: '**', type: 'ASTERISK_2', on: 'both' },
+  '***': { inner: '***', type: 'ASTERISK_3', on: 'both' },
+  '"': { inner: '"', type: 'DBLQUOTE', on: 'both' },
+  '`': { inner: '`', type: 'GRAVE', on: 'both' },
+  '~~': { inner: '~~', type: 'TILDE', on: 'both' },
+  '__': { inner: '__', type: 'UNDERSCORE', on: 'both' },
+  '--': { inner: '--', type: 'HYPHEN', on: 'both' },
+  '(': { inner: '(', type: 'PARENTHESIS', on: 'start' },
+  ')': { inner: ')', type: 'PARENTHESIS', on: 'end' },
+  '[': { inner: '[', type: 'BRACKET', on: 'start' },
+  ']': { inner: ']', type: 'BRACKET', on: 'end' },
+  '{': { inner: '{', type: 'BRACE', on: 'start' },
+  '}': { inner: '}', type: 'BRACE', on: 'end' },
+  '<': { inner: '<', type: 'ANGLE', on: 'start' },
+  '>': { inner: '>', type: 'ANGLE', on: 'end' },
+  '「': { inner: '「', type: 'CJKQUOTE', on: 'start' },
+  '」': { inner: '」', type: 'CJKQUOTE', on: 'end' },
+  '『': { inner: '『', type: 'CJKQUOTE', on: 'start' },
+  '』': { inner: '』', type: 'CJKQUOTE', on: 'end' }
 }
 const SYMBOLCHAR = Object.keys(SYMBOLOBJ).join('');
 function charType(char) {
@@ -46,7 +46,7 @@ function charType(char) {
 }
 
 function pureTextObj(text='') {
-  return { inner: text, length: text.length, type: 'TEXT' };
+  return { inner: text, type: 'TEXT' };
 }
 function mkTextObj(charList) {
   let text = charList.join('');
@@ -93,7 +93,7 @@ function* spanStrGenerator(textObjGen, inherit) {
   for (let textObj of textObjGen) {
     let inner = textObj.inner;
     let startIdx = inherit.startIdx;
-    let endIdx = startIdx + textObj.length;
+    let endIdx = startIdx + inner.length;
     
     if (textObj.type !== 'TEXT') {
       let symbolClass = HTMLCLASS[textObj.type];
