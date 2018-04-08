@@ -1,7 +1,7 @@
 # Text Revealer
 Text Revealer is a tool for people to display their text.
 
-Just like screen-message but has more features like styling the text.
+Just like screen-message but has more features such as styling the text.
 
 *Read this in other languages: [English](README.md), [正體中文](README.zh-Hant-TW.md)*
 
@@ -59,24 +59,41 @@ Here are the HTML Class names of default symbols:
 | CJK quote      | `『`    | `』`    | `-cjkq`         |
 
 ### Customize Symbol
-Edit the JavaScript file `textRevealer.js` to customize symbols.
+Use the JavaScript methods listed below to customize symbols.
 
-The const `HTMLCLASS` define the HTML class name of each symbol by classification;
-and the const `SYMBOLOBJ` define the data of each symbol.
+#### 1. `setHTMLClass(type, className)`
+  - **type** -  Classification of the symbol.
+  - **className** _(String)_ - HTML class name.
 
-For example, to add `##` as a symbol in both side of text, we need to edit the JS file like:
+#### 2. `addSymbol(symbol, type, on='both', view=undefined)`
+  - **symbol** _(String)_ - The text which people key in.
+  - **type** -  Classification of the symbol.
+  - **on** - The symbol will wrap on which side.
+    - `'both'`, `'start'`, `'end'`
+    - default: `'both'`
+  - **view** _(String)_ - Displayed text.
+    - default: `undefined`, will be the same as **symbol**.
 
-```JavaScript
-const HTMLCLASS = {
-  // ...
-  NUMBERSIGN: '-numsign'  // Classification: HTML class name
-}
-const SYMBOLOBJ = {
-  // ...
-  '##': {           // The text which people key in
-    inner: '##',        // Displayed text
-    type: 'NUMBERSIGN', // Classification of the symbol, see HTMLCLASS
-    on: 'both'          // Wrap on which side
-  }
-}
+For example, to add `##` as a symbol on both side of text, we need add two lines of JS code (after the reference of `textRevealer.js`) like:
+
+```HTML
+<script src="./textMarker.js"></script>
+<script src="./textRevealer.js"></script>
+<script>
+  setHTMLClass('NUMBERSIGN', '-numsign');
+  addSymbol('##', 'NUMBERSIGN');
+</script>
 ```
+
+And, to add `«` and `»` as symbols on both side of text, we need add three lines of JS code like:
+
+```HTML
+<script src="./textMarker.js"></script>
+<script src="./textRevealer.js"></script>
+<script>
+  setHTMLClass('GUILLEMET', '-guillemet');
+  addSymbol('«', 'GUILLEMET', 'start');
+  addSymbol('»', 'GUILLEMET', 'end');
+</script>
+```
+

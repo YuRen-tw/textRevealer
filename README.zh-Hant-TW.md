@@ -59,24 +59,41 @@ Text Revealer 是一個讓人顯示文字的工具。
 | 漢字雙引號 | `『`    | `』`    | `-cjkq`         |
 
 ### 自定義符號
-編輯 JavaScript 檔案 `textRevealer.js` 來自定義符號。
+利用下列的 JavaScript 方法來自定義符號。
 
-常數 `HTMLCLASS` 按分類定義每個符號的 HTML class 名稱；
-而常數 `SYMBOLOBJ` 定義每個符號的資料。
+#### 1. `setHTMLClass(type, className)`
+  - **type** - 符號的分類。
+  - **className** _(String)_ - HTML class 名稱。
 
-例如，要加入包在文字兩邊的符號 `##`，我們需要像下面一樣編輯 JS 檔案：
+#### 2. `addSymbol(symbol, type, on='both', view=undefined)`
+  - **symbol** _(String)_ - 使用者輸入的文字。
+  - **type** -  符號的分類。
+  - **on** - 符號包在文字的哪一邊。
+    - `'both'`, `'start'`, `'end'`
+    - 預設：`'both'`
+  - **view** _(String)_ - 顯示的文字。
+    - 預設：`undefined`，會跟 **symbol** 一樣。
 
-```JavaScript
-const HTMLCLASS = {
-  // ...
-  NUMBERSIGN: '-numsign'  // 符號分類 : HTML class 名稱
-}
-const SYMBOLOBJ = {
-  // ...
-  '##': {           // 使用者輸入的文字
-    inner: '##',        // 顯示的文字
-    type: 'NUMBERSIGN', // 符號的分類，對應 HTMLCLASS
-    on: 'both'          // 符號包在文字的哪一邊
-  }
-}
+例如，要加入 `##` 做為包在文字兩邊的符號，我們需要加入兩行 JS 程式碼（在 `textRevealer.js` 的引用之後），像是：
+
+```HTML
+<script src="./textMarker.js"></script>
+<script src="./textRevealer.js"></script>
+<script>
+  setHTMLClass('NUMBERSIGN', '-numsign');
+  addSymbol('##', 'NUMBERSIGN');
+</script>
 ```
+
+而要加入 `«` 和 `»` 做為包在文字兩邊的符號，我們需要加入三行 JS 程式碼，像是：
+
+```HTML
+<script src="./textMarker.js"></script>
+<script src="./textRevealer.js"></script>
+<script>
+  setHTMLClass('GUILLEMET', '-guillemet');
+  addSymbol('«', 'GUILLEMET', 'start');
+  addSymbol('»', 'GUILLEMET', 'end');
+</script>
+```
+
