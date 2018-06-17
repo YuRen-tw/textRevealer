@@ -19,6 +19,12 @@
 <script src="./textMarker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
+  addSymbol('{', 'GROUP', 'start');
+  addSymbol('}', 'GROUP', 'end');
+  
+  setHTMLClass('NUMBERSIGN', '-numsign');
+  addSymbol('#', 'NUMBERSIGN', 'lead');
+  
   setHTMLClass('ASTERISK', '-ast');
   setHTMLClass('ASTERISK_2', '-ast2');
   setHTMLClass('ASTERISK_3', '-ast3');
@@ -48,10 +54,6 @@
   setHTMLClass('BRACKET', '-bracket');
   addSymbol('[', 'BRACKET', 'start');
   addSymbol(']', 'BRACKET', 'end');
-  
-  setHTMLClass('BRACE', '-brace');
-  addSymbol('{', 'BRACE', 'start');
-  addSymbol('}', 'BRACE', 'end');
   
   setHTMLClass('ANGLE', '-angle');
   addSymbol('<', 'ANGLE', 'start');

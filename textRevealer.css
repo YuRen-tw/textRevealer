@@ -59,6 +59,10 @@ body {
   font-size: .9em;
   opacity: .2; }
 
+.tag.-numsign:not(.-G-start):not(.-G-end) {
+  font-size: 2em;
+  font-weight: bold; }
+
 .tag.-ast, .tag.-ast3 {
   font-style: italic; }
 
