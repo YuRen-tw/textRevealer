@@ -58,7 +58,7 @@ Here are the HTML Class names of default symbols:
 | Symbol         | Opening | Closing | Leading | HTML Class Name |
 | -------------- | :-----: | :-----: | :-----: | --------------- |
 | GROUP          | `{`     | `}`     |         | `-G`            |
-| Number Sign    |         |         | `#`     | `-ast`          |
+| Number Sign    |         |         | `#`     | `-numsign`      |
 | Asterisk       | `*`     | `*`     |         | `-ast`          |
 | Asterisk × 2   | `**`    | `**`    |         | `-ast2`         |
 | Asterisk × 3   | `***`   | `***`   |         | `-ast3`         |
