@@ -55,7 +55,7 @@ Text Revealer 是一個讓人顯示文字的工具。
 
 下列是預設的符號的 HTML Class 名稱：
 
-| 符號       | 開始    | 結束    | 結束    | HTML Class 名稱 |
+| 符號       | 開始    | 結束    | 領頭    | HTML Class 名稱 |
 | ---------- | :-----: | :-----: | :-----: | --------------- |
 | 群組 GROUP | `{`     | `}`     |         | `-G`            |
 | 井字號     |         |         | `#`     | `-numsign`      |
@@ -95,7 +95,7 @@ Text Revealer 是一個讓人顯示文字的工具。
 <script src="./textMarker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addSymbolType('DOLLARSIGN', '-numsign');
+  addSymbolType('DOLLARSIGN', '-dollarsign');
   addSymbol('$$', 'DOLLARSIGN');
 </script>
 ```
