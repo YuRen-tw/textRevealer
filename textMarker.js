@@ -1,7 +1,7 @@
 function* addEndOf(iterable, end) {
   for (let element of iterable)
     yield element;
-  yield end
+  yield end;
 }
 function* enumerate(iterable, start=0) {
   let idx = start;
@@ -21,7 +21,7 @@ const HTMLClass = new Map([
 const SymbolTrie = new Map();
 
 function setHTMLClass(type, className) {
-  HTMLClass.set(type, className)
+  HTMLClass.set(type, className);
 }
 function addSymbol(symbol, type, on='both', view=undefined) {
   let Trie = SymbolTrie;
@@ -110,48 +110,59 @@ function mkSpanStr(inner, startIdx, endIdx, scale, ...classList) {
   let classString = `class="${HTMLClass.get('INIT')} ${classList.join(' ')}"`;
   let data = (`data-start="${startIdx}" ` +
               `data-end="${endIdx}" ` +
-              `data-scale="${scale}"`);
+              `data-scale="${scale}"` +
+              `data-content="${inner}"`);
   return `<span ${classString} ${data}>${toHTML(inner)}</span>`;
 }
-function* spanStrGenerator(textObjGen, inherit) {
+
+function addClassAmount(classAmount, symbolClass, add) {
+  let amount = classAmount[symbolClass] || 0;
+  if (add > 0 || amount >= add)
+    classAmount[symbolClass] = amount + add;
+}
+function updateClassAmount(classAmount, currClass, on) {
+  if (on === 'end')
+    addClassAmount(classAmount, currClass, -1);
+  let classList = (Object.keys(classAmount)
+                   .filter(k => classAmount[k] > 0));
+  if (on === 'start')
+    addClassAmount(classAmount, currClass, 1);
+  return classList;
+}
+
+function* spanStrGenerator(textObjGen) {
+  let classAmount = {};
+  let startIdx = 0;
+  
   for (let textObj of textObjGen) {
+    let type = textObj.type;
     let inner = textObj.view;
-    let startIdx = inherit.startIdx;
     let endIdx = startIdx + textObj.rawLength;
     let scale = textObj.scale;
+    let spanStr = (...classList) =>
+      mkSpanStr(inner, startIdx, endIdx, scale, ...classList);
     
-    if (textObj.type !== 'TEXT') {
-      let symbolClass = HTMLClass.get(textObj.type);
-      let amount = inherit.classAmount[symbolClass] || 0;
+    if (type !== 'TEXT') {
+      let on = textObj.on;
+      let symbolClass = HTMLClass.get(type);
+      let amount = classAmount[symbolClass] || 0;
       
       let bound = '';      
-      if (textObj.on === 'start' ||
-          (textObj.on === 'both' && amount < 1))
+      if (on === 'start' ||
+          (on === 'both' && amount < 1))
         bound = 'start';
-      if (textObj.on === 'end' ||
-          (textObj.on === 'both' && amount > 0))
+      if ((on === 'end' && amount > 0) ||
+          (on === 'both' && amount > 0))
         bound = 'end';
       
-      if (bound === 'end')
-        inherit.classAmount[symbolClass] = amount - 1;
-      
-      let classList = (Object.keys(inherit.classAmount)
-                       .filter(k => inherit.classAmount[k] > 0));
-      let symbolBoundClass = `${symbolClass}-${bound}`;
-      yield mkSpanStr(inner, startIdx, endIdx, scale,
-                      symbolBoundClass, ...classList);
-      
-      if (bound === 'start')
-        inherit.classAmount[symbolClass] = amount + 1;
-      
+      let classList = updateClassAmount(classAmount, symbolClass, bound);
+      yield spanStr(`${symbolClass}-${bound}`, ...classList);
     } else {
-      let classList = (Object.keys(inherit.classAmount)
-                       .filter(k => inherit.classAmount[k] > 0));
-      yield mkSpanStr(inner, startIdx, endIdx, scale,
-                      HTMLClass.get('TEXT'), ...classList);
+      let classList = updateClassAmount(classAmount);
+      yield spanStr(HTMLClass.get('TEXT'), ...classList);
     }
     
-    inherit.startIdx = endIdx;
+    startIdx = endIdx;
   }
 }
 
