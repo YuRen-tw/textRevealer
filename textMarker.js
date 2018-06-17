@@ -11,7 +11,7 @@ function* enumerate(iterable, start=0) {
   }
 }
 
-const HTMLClass = new Map([
+const SymbolType_HTMLClass = new Map([
   ['INIT', 'tag'],
   ['TEXT', ''],
   ['SYMBOL', '-symbol'],
@@ -21,8 +21,11 @@ const HTMLClass = new Map([
 ]);
 const SymbolTrie = new Map();
 
-function setHTMLClass(type, className) {
-  HTMLClass.set(type, className);
+function addSymbolType(type, className) {
+  SymbolType_HTMLClass.set(type, className);
+}
+function getSymbolClass(type) {
+  return SymbolType_HTMLClass.get(type) || '';
 }
 function addSymbol(symbol, type, on='both', view=undefined) {
   let Trie = SymbolTrie;
@@ -42,7 +45,7 @@ function addSymbol(symbol, type, on='both', view=undefined) {
     scale: view.length / symbol.length
   });
 }
-setHTMLClass('LINEBREAK', '-br')
+addSymbolType('LINEBREAK', '-br')
 addSymbol('\n', 'LINEBREAK', '');
 
 function mkTextObj(text) {
@@ -108,8 +111,8 @@ function toHTML(str) {
   );
 }
 function mkSpanStr(inner, startIdx, endIdx, scale, ...classList) {
-  classList = classList || [];
-  let classString = `class="${HTMLClass.get('INIT')} ${classList.join(' ')}"`;
+  classList = (classList || []).join(' ');
+  let classString = `class="${getSymbolClass('INIT')} ${classList}"`;
   let data = (`data-start="${startIdx}" ` +
               `data-end="${endIdx}" ` +
               `data-scale="${scale}"` +
@@ -129,7 +132,7 @@ function updateTypeAmount(typeAmount, currType, on) {
   for (let [type_act, amount] of typeAmount) {
     let [type, act] = type_act.split('@');
     if (amount > 0)
-      classList.push(HTMLClass.get(type));
+      classList.push(getSymbolClass(type));
     
     if (act === 'lead' && amount > 0) {
       addTypeAmount(typeAmount, type, 'lead', -1);
@@ -173,12 +176,12 @@ function* spanStrGenerator(textObjGen) {
       if (on === 'lead')
         bound = on;
       
-      let symbolClass = HTMLClass.get(type);
+      let symbolClass = getSymbolClass(type);
       let classList = updateTypeAmount(typeAmount, type, bound);
       yield spanStr(`${symbolClass}-${bound}`, ...classList);
     } else {
       let classList = updateTypeAmount(typeAmount);
-      yield spanStr(HTMLClass.get('TEXT'), ...classList);
+      yield spanStr(getSymbolClass('TEXT'), ...classList);
     }
     
     startIdx = endIdx;

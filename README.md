@@ -76,7 +76,7 @@ Here are the HTML Class names of default symbols:
 ### Customize Symbol
 Use the JavaScript methods listed below to customize symbols.
 
-#### 1. `setHTMLClass(type, className)`
+#### 1. `addSymbolType(type, className)`
   - **type** -  Classification of the symbol.
   - **className** _(String)_ - HTML class name.
 
@@ -95,7 +95,7 @@ For example, to add `$$` as a symbol on both side of text, we need add two lines
 <script src="./textMarker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  setHTMLClass('DOLLARSIGN', '-numsign');
+  addSymbolType('DOLLARSIGN', '-numsign');
   addSymbol('$$', 'DOLLARSIGN');
 </script>
 ```
@@ -106,7 +106,7 @@ And, to add `«` and `»` as symbols on both side of text, we need add three lin
 <script src="./textMarker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  setHTMLClass('GUILLEMET', '-guillemet');
+  addSymbolType('GUILLEMET', '-guillemet');
   addSymbol('«', 'GUILLEMET', 'start');
   addSymbol('»', 'GUILLEMET', 'end');
 </script>

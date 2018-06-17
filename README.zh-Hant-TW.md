@@ -76,7 +76,7 @@ Text Revealer 是一個讓人顯示文字的工具。
 ### 自定義符號
 利用下列的 JavaScript 方法來自定義符號。
 
-#### 1. `setHTMLClass(type, className)`
+#### 1. `addSymbolType(type, className)`
   - **type** - 符號的分類。
   - **className** _(String)_ - HTML class 名稱。
 
@@ -95,7 +95,7 @@ Text Revealer 是一個讓人顯示文字的工具。
 <script src="./textMarker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  setHTMLClass('DOLLARSIGN', '-numsign');
+  addSymbolType('DOLLARSIGN', '-numsign');
   addSymbol('$$', 'DOLLARSIGN');
 </script>
 ```
@@ -106,7 +106,7 @@ Text Revealer 是一個讓人顯示文字的工具。
 <script src="./textMarker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  setHTMLClass('GUILLEMET', '-guillemet');
+  addSymbolType('GUILLEMET', '-guillemet');
   addSymbol('«', 'GUILLEMET', 'start');
   addSymbol('»', 'GUILLEMET', 'end');
 </script>

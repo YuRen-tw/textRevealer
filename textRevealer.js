@@ -14,7 +14,7 @@ function putHTMLToReveal() {
 
 function mkCursorElement() {
   let cursor = document.createElement('span');
-  cursor.classList.add(HTMLClass.get('INIT'), HTMLClass.get('CURSOR'));
+  cursor.classList.add(getSymbolClass('INIT'), getSymbolClass('CURSOR'));
   return cursor;
 }
 function splitSelectElement(originalElement, bound, inner='right') {
@@ -25,9 +25,9 @@ function splitSelectElement(originalElement, bound, inner='right') {
   let revealBound = Math.floor(bound * after.dataset.scale * 1);
   
   if (inner === 'right')
-    before.classList.remove(HTMLClass.get('SELECT'));
+    before.classList.remove(getSymbolClass('SELECT'));
   if (inner === 'left')
-    after.classList.remove(HTMLClass.get('SELECT'));
+    after.classList.remove(getSymbolClass('SELECT'));
   
   before.textContent = text.slice(0, revealBound);
   after.textContent = text.slice(revealBound);
@@ -44,7 +44,7 @@ function putSelectOnRevealer() {
   let selectedNodes = nodes.filter(node => {
     return (node.dataset.start * 1 < end && node.dataset.end * 1 > start);
   });
-  selectedNodes.forEach(node => node.classList.add(HTMLClass.get('SELECT')));
+  selectedNodes.forEach(node => node.classList.add(getSymbolClass('SELECT')));
   
   let selectStart = selectedNodes[0];
   let selectEnd = selectedNodes[selectedNodes.length - 1];
@@ -86,13 +86,13 @@ function getSelectionRangeFromRevealer() {
   let [start, end] = [0, 0];
   
   let startNode = selection.anchorNode.parentNode;
-  end = start = (startNode.dataset.start * 1 +
-                 Math.floor(selection.anchorOffset / (startNode.dataset.scale * 1)));
+  let startOffset = selection.anchorOffset / (startNode.dataset.scale * 1);
+  end = start = (startNode.dataset.start * 1 + Math.floor(startOffset));
   
   if (!selection.isCollapsed) {
     let endNode = selection.focusNode.parentNode;
-    end = (endNode.dataset.start * 1 +
-           Math.floor(selection.focusOffset / (endNode.dataset.scale * 1)));
+    let endOffset = selection.focusOffset / (endNode.dataset.scale * 1);
+    end = (endNode.dataset.start * 1 + Math.floor(endOffset));
   }
   
   return start <= end ? [start, end] : [end, start];
