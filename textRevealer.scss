@@ -66,6 +66,11 @@ $font-size: 70vmin;
     opacity: .2;
   }
   
+  &.-numsign:not(.-G-start):not(.-G-end) {
+    font-size: 2em;
+    font-weight: bold;
+  }
+  
   &.-ast, &.-ast3 { font-style: italic; }
   &.-ast2, &.-ast3 { font-weight: bold; }
   &.-ast, &.-ast2, &.-ast3 {

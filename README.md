@@ -9,8 +9,9 @@ Just like screen-message but has more features such as styling the text.
 ### Style
 Wrap text by the symbols listed below to add style to the text.
 
-| Symbol         | Start   | End     | Style        |
+| Symbol         | Opening | Closing | Style        |
 | -------------- | :-----: | :-----: | ------------ |
+| GROUP          | `{`     | `}`     | None         |
 | Asterisk       | `*`     | `*`     | Italic       |
 | Asterisk × 2   | `**`    | `**`    | Bold         |
 | Asterisk × 3   | `***`   | `***`   | Bold Italic  |
@@ -22,6 +23,16 @@ Wrap text by the symbols listed below to add style to the text.
 | Angle          | `<`     | `>`     | Monospace    |
 | CJK quote      | `「`    | `」`    | Serif        |
 | CJK quote      | `『`    | `』`    | Serif        |
+
+Or add the symbols listed below in front of a "bolck of text".
+
+| Symbol         | Leading | Style        |
+| -------------- | :-----: | ------------ |
+| Number sign    | `#`     | Header       |
+
+> A block of text is:
+>    1. line of text excluding symbols and line break
+>    2. text wrapped by `GROUP` symbols
 
 ### Vertical Writing Direction
 Press `Tab` key to switch writing direction between horizontal and vertical (vertical-RL).
@@ -38,11 +49,7 @@ Those HTML class names are in the form of:
 * Closing symbol: `-name-end`
 * Leading symbol: `-name-lead`
 
-> Leading symbol will only affect the __adjacent__ block of text follow it.
-
-> A block of text is:
->    1. line of text excluding symbols and line break
->    2. text wrapped by `GROUP` symbols
+> Leading symbol will only affect the **adjacent** "block of text" follow it.
 
 Where the `-name` is the HTML class name of each symbol.
 
@@ -81,14 +88,14 @@ Use the JavaScript methods listed below to customize symbols.
   - **view** _(String)_ - Displayed text.
     - default: `undefined`, will be the same as **symbol**.
 
-For example, to add `##` as a symbol on both side of text, we need add two lines of JS code (after the reference of `textRevealer.js`) like:
+For example, to add `$$` as a symbol on both side of text, we need add two lines of JS code (after the reference of `textRevealer.js`) like:
 
 ```HTML
 <script src="./textMarker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  setHTMLClass('NUMBERSIGN', '-numsign');
-  addSymbol('##', 'NUMBERSIGN');
+  setHTMLClass('DOLLARSIGN', '-numsign');
+  addSymbol('$$', 'DOLLARSIGN');
 </script>
 ```
 
