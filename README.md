@@ -34,8 +34,15 @@ Change the CSS of the HTML classes to customize the style.
 Those HTML class names are in the form of:
 
 * Wrapped text: `-name`
-* Start symbol: `-name-start`
-* End symbol: `-name-end`
+* Opening symbol: `-name-start`
+* Closing symbol: `-name-end`
+* Leading symbol: `-name-lead`
+
+> Leading symbol will only affect the __adjacent__ block of text follow it.
+
+> A block of text is:
+>    1. line of text excluding symbols and line break
+>    2. text wrapped by `GROUP` symbols
 
 Where the `-name` is the HTML class name of each symbol.
 
@@ -43,6 +50,7 @@ Here are the HTML Class names of default symbols:
 
 | Symbol         | Start   | End     | HTML Class Name |
 | -------------- | :-----: | :-----: | --------------- |
+| GROUP          | `{`     | `}`     | `-G`            |
 | Asterisk       | `*`     | `*`     | `-ast`          |
 | Asterisk × 2   | `**`    | `**`    | `-ast2`         |
 | Asterisk × 3   | `***`   | `***`   | `-ast3`         |
@@ -53,7 +61,6 @@ Here are the HTML Class names of default symbols:
 | Tilde × 2      | `~~`    | `~~`    | `-tilde`        |
 | Parenthesis    | `(`     | `)`     | `-paren`        |
 | Bracket        | `[`     | `]`     | `-bracket`      |
-| Brace          | `{`     | `}`     | `-brace`        |
 | Angle          | `<`     | `>`     | `-angle`        |
 | CJK quote      | `「`    | `」`    | `-cjkq`         |
 | CJK quote      | `『`    | `』`    | `-cjkq`         |
@@ -69,7 +76,7 @@ Use the JavaScript methods listed below to customize symbols.
   - **symbol** _(String)_ - The text which people key in.
   - **type** -  Classification of the symbol.
   - **on** - The symbol will wrap on which side.
-    - `'both'`, `'start'`, `'end'`
+    - `'both'`, `'start'`, `'end'`, `lead`
     - default: `'both'`
   - **view** _(String)_ - Displayed text.
     - default: `undefined`, will be the same as **symbol**.
