@@ -55,22 +55,23 @@ Where the `-name` is the HTML class name of each symbol.
 
 Here are the HTML Class names of default symbols:
 
-| Symbol         | Start   | End     | HTML Class Name |
-| -------------- | :-----: | :-----: | --------------- |
-| GROUP          | `{`     | `}`     | `-G`            |
-| Asterisk       | `*`     | `*`     | `-ast`          |
-| Asterisk × 2   | `**`    | `**`    | `-ast2`         |
-| Asterisk × 3   | `***`   | `***`   | `-ast3`         |
-| Double quote   | `"`     | `"`     | `-dblq`         |
-| Grave          | `` ` `` | `` ` `` | `-grave`        |
-| Underscore × 2 | `__`    | `__`    | `-under`        |
-| Hyphen × 2     | `--`    | `--`    | `-hyphen`       |
-| Tilde × 2      | `~~`    | `~~`    | `-tilde`        |
-| Parenthesis    | `(`     | `)`     | `-paren`        |
-| Bracket        | `[`     | `]`     | `-bracket`      |
-| Angle          | `<`     | `>`     | `-angle`        |
-| CJK quote      | `「`    | `」`    | `-cjkq`         |
-| CJK quote      | `『`    | `』`    | `-cjkq`         |
+| Symbol         | Opening | Closing | Leading | HTML Class Name |
+| -------------- | :-----: | :-----: | :-----: | --------------- |
+| GROUP          | `{`     | `}`     |         | `-G`            |
+| Number Sign    |         |         | `#`     | `-ast`          |
+| Asterisk       | `*`     | `*`     |         | `-ast`          |
+| Asterisk × 2   | `**`    | `**`    |         | `-ast2`         |
+| Asterisk × 3   | `***`   | `***`   |         | `-ast3`         |
+| Double quote   | `"`     | `"`     |         | `-dblq`         |
+| Grave          | `` ` `` | `` ` `` |         | `-grave`        |
+| Underscore × 2 | `__`    | `__`    |         | `-under`        |
+| Hyphen × 2     | `--`    | `--`    |         | `-hyphen`       |
+| Tilde × 2      | `~~`    | `~~`    |         | `-tilde`        |
+| Parenthesis    | `(`     | `)`     |         | `-paren`        |
+| Bracket        | `[`     | `]`     |         | `-bracket`      |
+| Angle          | `<`     | `>`     |         | `-angle`        |
+| CJK quote      | `「`    | `」`    |         | `-cjkq`         |
+| CJK quote      | `『`    | `』`    |         | `-cjkq`         |
 
 ### Customize Symbol
 Use the JavaScript methods listed below to customize symbols.
