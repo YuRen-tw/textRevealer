@@ -15,6 +15,7 @@ const HTMLClass = new Map([
   ['INIT', 'tag'],
   ['TEXT', ''],
   ['SYMBOL', '-symbol'],
+  ['GROUP', '-G'],
   ['CURSOR', '-cursor'],
   ['SELECT', '-select'],
 ]);
@@ -41,6 +42,8 @@ function addSymbol(symbol, type, on='both', view=undefined) {
     scale: view.length / symbol.length
   });
 }
+setHTMLClass('LINEBREAK', '-br')
+addSymbol('\n', 'LINEBREAK', '');
 
 function mkTextObj(text) {
   return {
@@ -95,7 +98,6 @@ function* textObjGen(charGen) {
   yield mkTextObj(charList.join(''));
 }
 
-
 function toHTML(str) {
   return (
     str
@@ -115,23 +117,37 @@ function mkSpanStr(inner, startIdx, endIdx, scale, ...classList) {
   return `<span ${classString} ${data}>${toHTML(inner)}</span>`;
 }
 
-function addClassAmount(classAmount, symbolClass, add) {
-  let amount = classAmount[symbolClass] || 0;
+function addTypeAmount(typeAmount, type, act, add) {
+  let amount = typeAmount.get(`${type}@${act}`) || 0;
   if (add > 0 || amount >= add)
-    classAmount[symbolClass] = amount + add;
+    typeAmount.set(`${type}@${act}`, amount + add);
 }
-function updateClassAmount(classAmount, currClass, on) {
+function updateTypeAmount(typeAmount, currType, on) {
+  let classList = [];
   if (on === 'end')
-    addClassAmount(classAmount, currClass, -1);
-  let classList = (Object.keys(classAmount)
-                   .filter(k => classAmount[k] > 0));
+    addTypeAmount(typeAmount, currType, 'normal', -1);
+  for (let [type_act, amount] of typeAmount) {
+    let [type, act] = type_act.split('@');
+    if (amount > 0)
+      classList.push(HTMLClass.get(type));
+    
+    if (act === 'lead' && amount > 0) {
+      addTypeAmount(typeAmount, type, 'lead', -1);
+      if (currType === 'GROUP' && on === 'start')
+        addTypeAmount(typeAmount, type, 'lock', 1);
+    }
+    if (act === 'lock' && amount > 0 && currType === 'GROUP' && on === 'end')
+        addTypeAmount(typeAmount, type, 'lock', -1);
+  }
   if (on === 'start')
-    addClassAmount(classAmount, currClass, 1);
+    addTypeAmount(typeAmount, currType, 'normal', 1);
+  if (on === 'lead')
+    addTypeAmount(typeAmount, currType, 'lead', 1);
   return classList;
 }
 
 function* spanStrGenerator(textObjGen) {
-  let classAmount = {};
+  let typeAmount = new Map();
   let startIdx = 0;
   
   for (let textObj of textObjGen) {
@@ -144,21 +160,24 @@ function* spanStrGenerator(textObjGen) {
     
     if (type !== 'TEXT') {
       let on = textObj.on;
-      let symbolClass = HTMLClass.get(type);
-      let amount = classAmount[symbolClass] || 0;
+      let act = on === 'lead' ? 'lead' : 'normal';
+      let amount = typeAmount.get(`${type}@${act}`) || 0;
       
-      let bound = '';      
+      let bound = '';
       if (on === 'start' ||
           (on === 'both' && amount < 1))
         bound = 'start';
       if ((on === 'end' && amount > 0) ||
           (on === 'both' && amount > 0))
         bound = 'end';
+      if (on === 'lead')
+        bound = on;
       
-      let classList = updateClassAmount(classAmount, symbolClass, bound);
+      let symbolClass = HTMLClass.get(type);
+      let classList = updateTypeAmount(typeAmount, type, bound);
       yield spanStr(`${symbolClass}-${bound}`, ...classList);
     } else {
-      let classList = updateClassAmount(classAmount);
+      let classList = updateTypeAmount(typeAmount);
       yield spanStr(HTMLClass.get('TEXT'), ...classList);
     }
     
