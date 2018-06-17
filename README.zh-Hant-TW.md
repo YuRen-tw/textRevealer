@@ -84,7 +84,7 @@ Text Revealer 是一個讓人顯示文字的工具。
   - **symbol** _(String)_ - 使用者輸入的文字。
   - **type** -  符號的分類。
   - **on** - 符號包在文字的哪一邊。
-    - `'both'`, `'start'`, `'end'`, `lead`
+    - `'both'`, `'start'`, `'end'`, `'lead'`
     - 預設：`'both'`
   - **view** _(String)_ - 顯示的文字。
     - 預設：`undefined`，會跟 **symbol** 一樣。

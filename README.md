@@ -84,7 +84,7 @@ Use the JavaScript methods listed below to customize symbols.
   - **symbol** _(String)_ - The text which people key in.
   - **type** -  Classification of the symbol.
   - **on** - The symbol will wrap on which side.
-    - `'both'`, `'start'`, `'end'`, `lead`
+    - `'both'`, `'start'`, `'end'`, `'lead'`
     - default: `'both'`
   - **view** _(String)_ - Displayed text.
     - default: `undefined`, will be the same as **symbol**.
