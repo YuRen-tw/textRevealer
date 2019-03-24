@@ -31,8 +31,8 @@ function splitSelectElement(originalElement, bound, inner='right') {
   
   before.textContent = text.slice(0, revealBound);
   after.textContent = text.slice(revealBound);
-  before.dataset.textContent = before.textContent;
-  after.dataset.textContent = after.textContent;
+  before.dataset.content = before.textContent;
+  after.dataset.content = after.textContent;
   before.dataset.end = before.dataset.start * 1 + bound;
   after.dataset.start = before.dataset.end;
     
