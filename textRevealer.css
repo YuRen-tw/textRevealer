@@ -84,7 +84,7 @@ body {
 .tag.-dblq, .tag.-dblq-start, .tag.-dblq-end, .tag.-cjkq, .tag.-cjkq-start, .tag.-cjkq-end {
   font-family: serif; }
 
-.tag.-grave, .tag.-grave-start, .tag.-grave-end, .tag.-angle, .tag.-angle-start, .tag.-angle-end {
+.tag.-grave, .tag.-grave-start, .tag.-grave-end {
   font-family: monospace;
   font-size: inherit;
   font-style: normal;
