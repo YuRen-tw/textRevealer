@@ -20,7 +20,6 @@ Wrap text by the symbols listed below to add style to the text.
 | Underscore × 2 | `__`    | `__`    | Underline    |
 | Hyphen × 2     | `--`    | `--`    | Line-through |
 | Tilde × 2      | `~~`    | `~~`    | Line-through |
-| Angle          | `<`     | `>`     | Monospace    |
 | CJK quote      | `「`    | `」`    | Serif        |
 | CJK quote      | `『`    | `』`    | Serif        |
 

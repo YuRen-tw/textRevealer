@@ -89,7 +89,7 @@ $font-size: 70vmin;
     }
   }
     
-  &.-grave, &.-angle {
+  &.-grave {
     &, &-start, &-end {
       font-family: monospace;
       font-size: inherit;
