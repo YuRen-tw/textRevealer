@@ -26,7 +26,6 @@ $font-size: 70vmin;
 
 #textRevealer {
   padding: $paddingTB $paddingRL;
-  
   font-size: $font-size;
   font-family: Roboto, "Noto Sans CJK TC", sans-serif;
   text-rendering: optimizeLegibility;
@@ -47,37 +46,44 @@ $font-size: 70vmin;
   to { background-color: rgba(0, 0, 0, .8); }
 }
 
+#textRevealer, .tag.-BR-{
+  &::before, &::after {
+    content: "";
+    padding: 1px;
+  }
+}
+
 .tag {
-  &.-cursor {
+  &.-CURSOR {
     position: relative;
+    margin: 0 -2px;
     &::before {
       content: '';
-      padding: 2px 2px;
-      animation: blink 900ms ease-in-out infinite alternate both;
+      padding: 0 2px;
+      animation: blink 600ms ease-in-out infinite alternate both;
     }
   }
-  &.-select {
+  &.-SELECT {
     background-color: rgba(0, 0, 0, .5);
     color: rgba(255, 255, 255, .9);
   }
   
-  &.-symbol {
+  &.-SYMBOL {
     font-size: .9em;
-    opacity: .2;
+    opacity: .5;
   }
   
   &.-numsign:not(.-G-start):not(.-G-end) {
     font-size: 2em;
-    font-weight: bold;
+    font-weight: 900;
+  }
+  &.-numsign2:not(.-G-start):not(.-G-end) {
+    font-size: 1.5em;
+    font-weight: 700;
   }
   
   &.-ast, &.-ast3 { font-style: italic; }
   &.-ast2, &.-ast3 { font-weight: bold; }
-  &.-ast, &.-ast2, &.-ast3 {
-    &-start, &-end {
-      font-size: .2em;
-    }
-  }
   
   &.-under { text-decoration: underline; }
   &.-hyphen { text-decoration: line-through; }
@@ -96,12 +102,8 @@ $font-size: 70vmin;
       font-style: normal;
       font-weight: normal;
       text-decoration: none;
-    }
-  }
-  &.-grave {
-    &, &-start, &-end {
       background-color: rgba(#fdc565, .2);
-      &.-select {
+      &.-SELECT {
         background-color: rgba(#f6b763, .5);
         color: #61574c;
       }

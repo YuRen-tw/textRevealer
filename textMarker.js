@@ -14,10 +14,10 @@ function* enumerate(iterable, start=0) {
 const SymbolType_HTMLClass = new Map([
   ['INIT', 'tag'],
   ['TEXT', ''],
-  ['SYMBOL', '-symbol'],
+  ['SYMBOL', '-SYMBOL'],
   ['GROUP', '-G'],
-  ['CURSOR', '-cursor'],
-  ['SELECT', '-select'],
+  ['CURSOR', '-CURSOR'],
+  ['SELECT', '-SELECT'],
 ]);
 const SymbolTrie = new Map();
 
@@ -45,7 +45,7 @@ function addSymbol(symbol, type, on='both', view=undefined) {
     scale: view.length / symbol.length
   });
 }
-addSymbolType('LINEBREAK', '-br')
+addSymbolType('LINEBREAK', '-BR')
 addSymbol('\n', 'LINEBREAK', '');
 
 function mkTextObj(text) {
@@ -178,7 +178,8 @@ function* spanStrGenerator(textObjGen) {
       
       let symbolClass = getSymbolClass(type);
       let classList = updateTypeAmount(typeAmount, type, bound);
-      yield spanStr(`${symbolClass}-${bound}`, ...classList);
+      yield spanStr(`${symbolClass}-${bound}`,
+                    getSymbolClass('SYMBOL'), ...classList);
     } else {
       let classList = updateTypeAmount(typeAmount);
       yield spanStr(getSymbolClass('TEXT'), ...classList);

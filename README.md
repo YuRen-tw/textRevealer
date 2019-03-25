@@ -25,9 +25,10 @@ Wrap text by the symbols listed below to add style to the text.
 
 Or add the symbols listed below in front of a "bolck of text".
 
-| Symbol         | Leading | Style        |
-| -------------- | :-----: | ------------ |
-| Number sign    | `#`     | Header       |
+| Symbol          | Leading | Style                             |
+| --------------- | :-----: | --------------------------------- |
+| Number sign     | `#`     | Header (size: 2em, weight: 900)   |
+| Number sign × 2 | `##`    | Header (size: 1.5em, weight: 700) |
 
 > A block of text is:
 >    1. line of text excluding symbols and line break
@@ -54,23 +55,24 @@ Where the `-name` is the HTML class name of each symbol.
 
 Here are the HTML Class names of default symbols:
 
-| Symbol         | Opening | Closing | Leading | HTML Class Name |
-| -------------- | :-----: | :-----: | :-----: | --------------- |
-| GROUP          | `{`     | `}`     |         | `-G`            |
-| Number Sign    |         |         | `#`     | `-numsign`      |
-| Asterisk       | `*`     | `*`     |         | `-ast`          |
-| Asterisk × 2   | `**`    | `**`    |         | `-ast2`         |
-| Asterisk × 3   | `***`   | `***`   |         | `-ast3`         |
-| Double quote   | `"`     | `"`     |         | `-dblq`         |
-| Grave          | `` ` `` | `` ` `` |         | `-grave`        |
-| Underscore × 2 | `__`    | `__`    |         | `-under`        |
-| Hyphen × 2     | `--`    | `--`    |         | `-hyphen`       |
-| Tilde × 2      | `~~`    | `~~`    |         | `-tilde`        |
-| Parenthesis    | `(`     | `)`     |         | `-paren`        |
-| Bracket        | `[`     | `]`     |         | `-bracket`      |
-| Angle          | `<`     | `>`     |         | `-angle`        |
-| CJK quote      | `「`    | `」`    |         | `-cjkq`         |
-| CJK quote      | `『`    | `』`    |         | `-cjkq`         |
+| Symbol          | Opening | Closing | Leading | HTML Class Name |
+| --------------- | :-----: | :-----: | :-----: | --------------- |
+| GROUP           | `{`     | `}`     |         | `-G`            |
+| Number Sign     |         |         | `#`     | `-numsign`      |
+| Number Sign × 2 |         |         | `##`    | `-numsign2`     |
+| Asterisk        | `*`     | `*`     |         | `-ast`          |
+| Asterisk × 2    | `**`    | `**`    |         | `-ast2`         |
+| Asterisk × 3    | `***`   | `***`   |         | `-ast3`         |
+| Double quote    | `"`     | `"`     |         | `-dblq`         |
+| Grave           | `` ` `` | `` ` `` |         | `-grave`        |
+| Underscore × 2  | `__`    | `__`    |         | `-under`        |
+| Hyphen × 2      | `--`    | `--`    |         | `-hyphen`       |
+| Tilde × 2       | `~~`    | `~~`    |         | `-tilde`        |
+| Parenthesis     | `(`     | `)`     |         | `-paren`        |
+| Bracket         | `[`     | `]`     |         | `-bracket`      |
+| Angle           | `<`     | `>`     |         | `-angle`        |
+| CJK quote       | `「`    | `」`    |         | `-cjkq`         |
+| CJK quote       | `『`    | `』`    |         | `-cjkq`         |
 
 ### Customize Symbol
 Use the JavaScript methods listed below to customize symbols.
