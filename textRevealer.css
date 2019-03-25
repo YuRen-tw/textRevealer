@@ -44,33 +44,39 @@ body {
   to {
     background-color: rgba(0, 0, 0, 0.8); } }
 
-.tag.-cursor {
-  position: relative; }
-  .tag.-cursor::before {
-    content: '';
-    padding: 2px 2px;
-    animation: blink 900ms ease-in-out infinite alternate both; }
+#textRevealer::before, #textRevealer::after, .tag.-BR-::before, .tag.-BR-::after {
+  content: "";
+  padding: 1px; }
 
-.tag.-select {
+.tag.-CURSOR {
+  position: relative;
+  margin: 0 -2px; }
+  .tag.-CURSOR::before {
+    content: '';
+    padding: 0 2px;
+    animation: blink 600ms ease-in-out infinite alternate both; }
+
+.tag.-SELECT {
   background-color: rgba(0, 0, 0, 0.5);
   color: rgba(255, 255, 255, 0.9); }
 
-.tag.-symbol {
+.tag.-SYMBOL {
   font-size: .9em;
-  opacity: .2; }
+  opacity: .5; }
 
 .tag.-numsign:not(.-G-start):not(.-G-end) {
   font-size: 2em;
-  font-weight: bold; }
+  font-weight: 900; }
+
+.tag.-numsign2:not(.-G-start):not(.-G-end) {
+  font-size: 1.5em;
+  font-weight: 700; }
 
 .tag.-ast, .tag.-ast3 {
   font-style: italic; }
 
 .tag.-ast2, .tag.-ast3 {
   font-weight: bold; }
-
-.tag.-ast-start, .tag.-ast-end, .tag.-ast2-start, .tag.-ast2-end, .tag.-ast3-start, .tag.-ast3-end {
-  font-size: .2em; }
 
 .tag.-under {
   text-decoration: underline; }
@@ -89,10 +95,8 @@ body {
   font-size: inherit;
   font-style: normal;
   font-weight: normal;
-  text-decoration: none; }
-
-.tag.-grave, .tag.-grave-start, .tag.-grave-end {
+  text-decoration: none;
   background-color: rgba(253, 197, 101, 0.2); }
-  .tag.-grave.-select, .tag.-grave-start.-select, .tag.-grave-end.-select {
+  .tag.-grave.-SELECT, .tag.-grave-start.-SELECT, .tag.-grave-end.-SELECT {
     background-color: rgba(246, 183, 99, 0.5);
     color: #61574c; }
