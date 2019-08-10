@@ -94,6 +94,7 @@ For example, to add `$$` as a symbol on both side of text, we need add two lines
 
 ```HTML
 <script src="./textMarker.js"></script>
+<script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
   addSymbolType('DOLLARSIGN', '-dollarsign');
@@ -105,6 +106,7 @@ And, to add `«` and `»` as symbols on both side of text, we need add three lin
 
 ```HTML
 <script src="./textMarker.js"></script>
+<script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
   addSymbolType('GUILLEMET', '-guillemet');

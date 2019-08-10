@@ -94,6 +94,7 @@ Text Revealer 是一個讓人顯示文字的工具。
 
 ```HTML
 <script src="./textMarker.js"></script>
+<script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
   addSymbolType('DOLLARSIGN', '-dollarsign');
@@ -105,6 +106,7 @@ Text Revealer 是一個讓人顯示文字的工具。
 
 ```HTML
 <script src="./textMarker.js"></script>
+<script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
   addSymbolType('GUILLEMET', '-guillemet');
