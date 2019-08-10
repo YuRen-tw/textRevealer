@@ -8,7 +8,7 @@ function getHeight(element) { return element.clientHeight; }
 
 function putHTMLToReveal() {
   let text = getTextArea().value;
-  let HTML = [...spanStrGenerator(textObjGen(text))].join('');
+  let HTML = [...spanStrGenerator(text)].join('');
   getTextRevealer().innerHTML = HTML;
 }
 

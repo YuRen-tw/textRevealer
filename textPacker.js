@@ -13,6 +13,27 @@ function addSymbolType(type, className) {
 function getSymbolClass(type) {
   return SymbolType_HTMLClass.get(type) || '';
 }
+function addSymbol(symbol, type, on='both', view=undefined) {
+  if (view === undefined)
+    view = symbol;
+  SymbolTrieInsert(symbol, {
+    type: type,
+    on: on,
+    raw: symbol,
+    view: view,
+    rawLength: symbol.length,
+    scale: view.length / symbol.length
+  });
+}
+function mkTextObj(text) {
+  return {
+    type: 'TEXT',
+    raw: text,
+    view: text,
+    rawLength: text.length,
+    scale: 1
+  };
+}
 addSymbolType('LINEBREAK', '-BR');
 addSymbol('\n', 'LINEBREAK', '');
 
@@ -65,11 +86,11 @@ function updateTypeAmount(typeAmount, currType, on) {
   return classList;
 }
 
-function* spanStrGenerator(textObjGen) {
+function* spanStrGenerator(charGen) {
   let typeAmount = new Map();
   let startIdx = 0;
   
-  for (let textObj of textObjGen) {
+  for (let textObj of textObjGen(charGen, mkTextObj)) {
     let type = textObj.type;
     let inner = textObj.view;
     let endIdx = startIdx + textObj.rawLength;

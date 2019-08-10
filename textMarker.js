@@ -13,40 +13,23 @@ function* enumerate(iterable, start=0) {
 
 const SymbolTrie = new Map();
 
-function addSymbol(symbol, type, on='both', view=undefined) {
+function SymbolTrieInsert(symbol, item) {
   let Trie = SymbolTrie;
   for (let char of symbol) {
     if (!Trie.has(char))
       Trie.set(char, new Map());
     Trie = Trie.get(char);
   }
-  if (view === undefined)
-    view = symbol;
-  Trie.set('END', {
-    type: type,
-    on: on,
-    raw: symbol,
-    view: view,
-    rawLength: symbol.length,
-    scale: view.length / symbol.length
-  });
+  Trie.set('END', item);
 }
 
-function mkTextObj(text) {
-  return {
-    type: 'TEXT',
-    raw: text,
-    view: text,
-    rawLength: text.length,
-    scale: 1
-  };
-}
-function* textObjGen(charGen) {
+function* textObjGen(charGen, mkTextObj) {
   let charList = [];
   let bList = [];  // [[start, alive, currEND, branch], ...]
   let yieldStartIdx = 0;
   
-  for (let [charIdx, char] of enumerate(addEndOf(charGen, ''))) {
+  charGen = addEndOf(charGen, '');
+  for (let [charIdx, char] of enumerate(charGen)) {
     let yieldMode = false;
     charList.push(char);
     
