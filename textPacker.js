@@ -21,7 +21,6 @@ function addSymbol(symbol, type, on='both', view=undefined) {
     on: on,
     raw: symbol,
     view: view,
-    rawLength: symbol.length,
     scale: view.length / symbol.length
   });
 }
@@ -30,7 +29,6 @@ function mkTextObj(text) {
     type: 'TEXT',
     raw: text,
     view: text,
-    rawLength: text.length,
     scale: 1
   };
 }
@@ -93,7 +91,7 @@ function* spanStrGenerator(charGen) {
   for (let textObj of textObjGen(charGen, mkTextObj)) {
     let type = textObj.type;
     let inner = textObj.view;
-    let endIdx = startIdx + textObj.rawLength;
+    let endIdx = startIdx + textObj.raw.length;
     let scale = textObj.scale;
     let spanStr = (...classList) =>
       mkSpanStr(inner, startIdx, endIdx, scale, ...classList);

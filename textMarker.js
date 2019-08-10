@@ -20,7 +20,7 @@ function SymbolTrieInsert(symbol, item) {
       Trie.set(char, new Map());
     Trie = Trie.get(char);
   }
-  Trie.set('END', item);
+  Trie.set('END', [symbol.length, item]);
 }
 
 function* textObjGen(charGen, mkTextObj) {
@@ -56,13 +56,13 @@ function* textObjGen(charGen, mkTextObj) {
       if (alive) break;
       bList.shift();
       if (currEND === undefined) continue;
-      let len = currEND.rawLength;
+      let len = currEND[0];
       let textList = charList.splice(0, start - yieldStartIdx);
       let symbolList = charList.splice(0, len);
       yieldStartIdx = start + len;
       if (textList.length)
         yield mkTextObj(textList.join(''));
-      yield currEND;
+      yield currEND[1];
     }
   }
   yield mkTextObj(charList.join(''));
