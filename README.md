@@ -90,6 +90,16 @@ Use the JavaScript methods listed below to customize marks.
   - **view** _(String)_ - Displayed text.
     - default: `undefined`, will be the same as **symbol**.
 
+#### 3. `addMarkBetween(type, openingSymbol, closingSymbol=undefined)`
+  - **type** -  Classification of the mark.
+  - **openingSymbol** _(String)_ - The opening symbol.
+  - **closingSymbol** _(String)_ - The closing symbol.
+    - default: `undefined`, will be the same as **openingSymbol**.
+
+#### 4. `addMark(type, leadingSymbol)`
+  - **type** -  Classification of the mark.
+  - **leadingSymbol** _(String)_ - The leading symbol.
+
 For example, to add `$$` as a symbol on both side of text, we need add two lines of JS code (after the reference of `textRevealer.js`) like:
 
 ```HTML
@@ -98,11 +108,11 @@ For example, to add `$$` as a symbol on both side of text, we need add two lines
 <script src="./textRevealer.js"></script>
 <script>
   addMarkType('DOLLARSIGN', '-dollarsign');
-  addMark('$$', 'DOLLARSIGN');
+  addMarkBetween('DOLLARSIGN', '$$');
 </script>
 ```
 
-And, to add `«` and `»` as symbols on both side of text, we need add three lines of JS code like:
+And, to add `«` and `»` as symbols on both side of text, we need add two lines of JS code like:
 
 ```HTML
 <script src="./textMarker.js"></script>
@@ -110,8 +120,7 @@ And, to add `«` and `»` as symbols on both side of text, we need add three lin
 <script src="./textRevealer.js"></script>
 <script>
   addMarkType('GUILLEMET', '-guillemet');
-  addMark('«', 'GUILLEMET', 'start');
-  addMark('»', 'GUILLEMET', 'end');
+  addMarkBetween('GUILLEMET', '«', '»');
 </script>
 ```
 

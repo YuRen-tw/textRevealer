@@ -25,48 +25,43 @@
   
   addMarkType('NUMBERSIGN', '-numsign');
   addMarkType('NUMBERSIGN_2', '-numsign2');
-  addMark('#', 'NUMBERSIGN', 'lead');
-  addMark('##', 'NUMBERSIGN_2', 'lead');
+  addMarkAfter('NUMBERSIGN', '#');
+  addMarkAfter('NUMBERSIGN_2', '##');
   
   addMarkType('ASTERISK', '-ast');
   addMarkType('ASTERISK_2', '-ast2');
   addMarkType('ASTERISK_3', '-ast3');
-  addMark('*', 'ASTERISK', 'both');
-  addMark('**', 'ASTERISK_2', 'both');
-  addMark('***', 'ASTERISK_3', 'both');
+  addMarkBetween('ASTERISK', '*');
+  addMarkBetween('ASTERISK_2', '**');
+  addMarkBetween('ASTERISK_3', '***');
   
   addMarkType('DBLQUOTE', '-dblq');
-  addMark('"', 'DBLQUOTE', 'both');
+  addMarkBetween('DBLQUOTE', '"');
   
   addMarkType('GRAVE', '-grave');
-  addMark('`', 'GRAVE', 'both');
+  addMarkBetween('GRAVE', '`');
   
   addMarkType('UNDERSCORE', '-under');
-  addMark('__', 'UNDERSCORE', 'both');
+  addMarkBetween('UNDERSCORE', '__');
   
   addMarkType('HYPHEN', '-hyphen');
-  addMark('--', 'HYPHEN', 'both');
+  addMarkBetween('HYPHEN', '--');
   
   addMarkType('TILDE', '-tilde');
-  addMark('~~', 'TILDE', 'both');
+  addMarkBetween('TILDE', '~~');
   
   addMarkType('PARENTHESIS', '-paren');
-  addMark('(', 'PARENTHESIS', 'start');
-  addMark(')', 'PARENTHESIS', 'end');
+  addMarkBetween('PARENTHESIS', '(', ')');
   
   addMarkType('BRACKET', '-bracket');
-  addMark('[', 'BRACKET', 'start');
-  addMark(']', 'BRACKET', 'end');
+  addMark('BRACKET', '[', ']');
   
   addMarkType('ANGLE', '-angle');
-  addMark('<', 'ANGLE', 'start');
-  addMark('>', 'ANGLE', 'end');
+  addMarkBetween('ANGLE', '<', '>');
   
   addMarkType('CJKQUOTE', '-cjkq');
-  addMark('「', 'CJKQUOTE', 'start');
-  addMark('」', 'CJKQUOTE', 'end');
-  addMark('『', 'CJKQUOTE', 'start');
-  addMark('』', 'CJKQUOTE', 'end');
+  addMarkBetween('CJKQUOTE', '「', '」');
+  addMarkBetween('CJKQUOTE', '『', '』');
 </script>
 
 </body>

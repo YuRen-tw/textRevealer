@@ -24,6 +24,17 @@ function addMark(symbol, type, on='both', view=undefined) {
     scale: view.length / symbol.length
   });
 }
+function addMarkBetween(type, openingSymbol, closingSymbol) {
+  if (closingSymbol === undefined) {
+    addMark(openingSymbol, type, on='both');
+  } else {
+    addMark(openingSymbol, type, on='start');
+    addMark(closingSymbol, type, on='end');
+  }
+}
+function addMarkAfter(type, leadingSymbol) {
+  addMark(leadingSymbol, type, on='lead');
+}
 function mkTextObj(text) {
   return {
     type: 'TEXT',

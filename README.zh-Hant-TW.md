@@ -90,6 +90,16 @@ Text Revealer 是一個讓人顯示文字的工具。
   - **view** _(String)_ - 顯示的文字。
     - 預設：`undefined`，會跟 **symbol** 一樣。
 
+#### 3. `addMarkBetween(type, openingSymbol, closingSymbol=undefined)`
+  - **type** -  標記的分類。
+  - **openingSymbol** _(String)_ - 開始符號。
+  - **closingSymbol** _(String)_ - 結束符號。
+    - 預設：`undefined`，會跟 **openingSymbol** 一樣。
+
+#### 4. `addMark(type, leadingSymbol)`
+  - **type** -  標記的分類。
+  - **leadingSymbol** _(String)_ - 領頭符號。
+
 例如，要加入 `$$` 做為包在文字兩邊的符號，我們需要加入兩行 JS 程式碼（在 `textRevealer.js` 的引用之後），像是：
 
 ```HTML
@@ -98,11 +108,11 @@ Text Revealer 是一個讓人顯示文字的工具。
 <script src="./textRevealer.js"></script>
 <script>
   addMarkType('DOLLARSIGN', '-dollarsign');
-  addMark('$$', 'DOLLARSIGN');
+  addMarkBetween('DOLLARSIGN', '$$');
 </script>
 ```
 
-而要加入 `«` 和 `»` 做為包在文字兩邊的符號，我們需要加入三行 JS 程式碼，像是：
+而要加入 `«` 和 `»` 做為包在文字兩邊的符號，我們需要加入兩行 JS 程式碼，像是：
 
 ```HTML
 <script src="./textMarker.js"></script>
@@ -110,8 +120,7 @@ Text Revealer 是一個讓人顯示文字的工具。
 <script src="./textRevealer.js"></script>
 <script>
   addMarkType('GUILLEMET', '-guillemet');
-  addMark('«', 'GUILLEMET', 'start');
-  addMark('»', 'GUILLEMET', 'end');
+  addMarkBetween('GUILLEMET', '«', '»');
 </script>
 ```
 
