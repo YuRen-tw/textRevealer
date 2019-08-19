@@ -20,53 +20,53 @@
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addSymbol('{', 'GROUP', 'start');
-  addSymbol('}', 'GROUP', 'end');
+  addMark('{', 'GROUP', 'start');
+  addMark('}', 'GROUP', 'end');
   
-  addSymbolType('NUMBERSIGN', '-numsign');
-  addSymbolType('NUMBERSIGN_2', '-numsign2');
-  addSymbol('#', 'NUMBERSIGN', 'lead');
-  addSymbol('##', 'NUMBERSIGN_2', 'lead');
+  addMarkType('NUMBERSIGN', '-numsign');
+  addMarkType('NUMBERSIGN_2', '-numsign2');
+  addMark('#', 'NUMBERSIGN', 'lead');
+  addMark('##', 'NUMBERSIGN_2', 'lead');
   
-  addSymbolType('ASTERISK', '-ast');
-  addSymbolType('ASTERISK_2', '-ast2');
-  addSymbolType('ASTERISK_3', '-ast3');
-  addSymbol('*', 'ASTERISK', 'both');
-  addSymbol('**', 'ASTERISK_2', 'both');
-  addSymbol('***', 'ASTERISK_3', 'both');
+  addMarkType('ASTERISK', '-ast');
+  addMarkType('ASTERISK_2', '-ast2');
+  addMarkType('ASTERISK_3', '-ast3');
+  addMark('*', 'ASTERISK', 'both');
+  addMark('**', 'ASTERISK_2', 'both');
+  addMark('***', 'ASTERISK_3', 'both');
   
-  addSymbolType('DBLQUOTE', '-dblq');
-  addSymbol('"', 'DBLQUOTE', 'both');
+  addMarkType('DBLQUOTE', '-dblq');
+  addMark('"', 'DBLQUOTE', 'both');
   
-  addSymbolType('GRAVE', '-grave');
-  addSymbol('`', 'GRAVE', 'both');
+  addMarkType('GRAVE', '-grave');
+  addMark('`', 'GRAVE', 'both');
   
-  addSymbolType('UNDERSCORE', '-under');
-  addSymbol('__', 'UNDERSCORE', 'both');
+  addMarkType('UNDERSCORE', '-under');
+  addMark('__', 'UNDERSCORE', 'both');
   
-  addSymbolType('HYPHEN', '-hyphen');
-  addSymbol('--', 'HYPHEN', 'both');
+  addMarkType('HYPHEN', '-hyphen');
+  addMark('--', 'HYPHEN', 'both');
   
-  addSymbolType('TILDE', '-tilde');
-  addSymbol('~~', 'TILDE', 'both');
+  addMarkType('TILDE', '-tilde');
+  addMark('~~', 'TILDE', 'both');
   
-  addSymbolType('PARENTHESIS', '-paren');
-  addSymbol('(', 'PARENTHESIS', 'start');
-  addSymbol(')', 'PARENTHESIS', 'end');
+  addMarkType('PARENTHESIS', '-paren');
+  addMark('(', 'PARENTHESIS', 'start');
+  addMark(')', 'PARENTHESIS', 'end');
   
-  addSymbolType('BRACKET', '-bracket');
-  addSymbol('[', 'BRACKET', 'start');
-  addSymbol(']', 'BRACKET', 'end');
+  addMarkType('BRACKET', '-bracket');
+  addMark('[', 'BRACKET', 'start');
+  addMark(']', 'BRACKET', 'end');
   
-  addSymbolType('ANGLE', '-angle');
-  addSymbol('<', 'ANGLE', 'start');
-  addSymbol('>', 'ANGLE', 'end');
+  addMarkType('ANGLE', '-angle');
+  addMark('<', 'ANGLE', 'start');
+  addMark('>', 'ANGLE', 'end');
   
-  addSymbolType('CJKQUOTE', '-cjkq');
-  addSymbol('「', 'CJKQUOTE', 'start');
-  addSymbol('」', 'CJKQUOTE', 'end');
-  addSymbol('『', 'CJKQUOTE', 'start');
-  addSymbol('』', 'CJKQUOTE', 'end');
+  addMarkType('CJKQUOTE', '-cjkq');
+  addMark('「', 'CJKQUOTE', 'start');
+  addMark('」', 'CJKQUOTE', 'end');
+  addMark('『', 'CJKQUOTE', 'start');
+  addMark('』', 'CJKQUOTE', 'end');
 </script>
 
 </body>

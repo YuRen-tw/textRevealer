@@ -14,7 +14,7 @@ function putHTMLToReveal() {
 
 function mkCursorElement() {
   let cursor = document.createElement('span');
-  cursor.classList.add(getSymbolClass('INIT'), getSymbolClass('CURSOR'));
+  cursor.classList.add(getMarkClass('INIT'), getMarkClass('CURSOR'));
   return cursor;
 }
 function splitSelectElement(originalElement, bound, inner='right') {
@@ -25,9 +25,9 @@ function splitSelectElement(originalElement, bound, inner='right') {
   let revealBound = Math.floor(bound * after.dataset.scale * 1);
   
   if (inner === 'right')
-    before.classList.remove(getSymbolClass('SELECT'));
+    before.classList.remove(getMarkClass('SELECT'));
   if (inner === 'left')
-    after.classList.remove(getSymbolClass('SELECT'));
+    after.classList.remove(getMarkClass('SELECT'));
   
   before.textContent = text.slice(0, revealBound);
   after.textContent = text.slice(revealBound);
@@ -46,7 +46,7 @@ function putSelectOnRevealer() {
   let selectedNodes = nodes.filter(node => {
     return (node.dataset.start * 1 < end && node.dataset.end * 1 > start);
   });
-  selectedNodes.forEach(node => node.classList.add(getSymbolClass('SELECT')));
+  selectedNodes.forEach(node => node.classList.add(getMarkClass('SELECT')));
   
   let selectStart = selectedNodes[0];
   let selectEnd = selectedNodes[selectedNodes.length - 1];

@@ -74,16 +74,16 @@ Here are the HTML Class names of default symbols:
 | CJK quote       | `「`    | `」`    |         | `-cjkq`         |
 | CJK quote       | `『`    | `』`    |         | `-cjkq`         |
 
-### Customize Symbol
-Use the JavaScript methods listed below to customize symbols.
+### Customize Mark
+Use the JavaScript methods listed below to customize marks.
 
-#### 1. `addSymbolType(type, className)`
-  - **type** -  Classification of the symbol.
+#### 1. `addMarkType(type, className)`
+  - **type** -  Classification of the mark.
   - **className** _(String)_ - HTML class name.
 
-#### 2. `addSymbol(symbol, type, on='both', view=undefined)`
-  - **symbol** _(String)_ - The text which people key in.
-  - **type** -  Classification of the symbol.
+#### 2. `addMark(symbol, type, on='both', view=undefined)`
+  - **symbol** _(String)_ - The symbol which people key in.
+  - **type** -  Classification of the mark.
   - **on** - The symbol will wrap on which side.
     - `'both'`, `'start'`, `'end'`, `'lead'`
     - default: `'both'`
@@ -97,8 +97,8 @@ For example, to add `$$` as a symbol on both side of text, we need add two lines
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addSymbolType('DOLLARSIGN', '-dollarsign');
-  addSymbol('$$', 'DOLLARSIGN');
+  addMarkType('DOLLARSIGN', '-dollarsign');
+  addMark('$$', 'DOLLARSIGN');
 </script>
 ```
 
@@ -109,9 +109,9 @@ And, to add `«` and `»` as symbols on both side of text, we need add three lin
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addSymbolType('GUILLEMET', '-guillemet');
-  addSymbol('«', 'GUILLEMET', 'start');
-  addSymbol('»', 'GUILLEMET', 'end');
+  addMarkType('GUILLEMET', '-guillemet');
+  addMark('«', 'GUILLEMET', 'start');
+  addMark('»', 'GUILLEMET', 'end');
 </script>
 ```
 

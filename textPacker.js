@@ -1,4 +1,4 @@
-const SymbolType_HTMLClass = new Map([
+const MarkType_HTMLClass = new Map([
   ['INIT', 'tag'],
   ['TEXT', ''],
   ['SYMBOL', '-SYMBOL'],
@@ -7,13 +7,13 @@ const SymbolType_HTMLClass = new Map([
   ['SELECT', '-SELECT'],
 ]);
 
-function addSymbolType(type, className) {
-  SymbolType_HTMLClass.set(type, className);
+function addMarkType(type, className) {
+  MarkType_HTMLClass.set(type, className);
 }
-function getSymbolClass(type) {
-  return SymbolType_HTMLClass.get(type) || '';
+function getMarkClass(type) {
+  return MarkType_HTMLClass.get(type) || '';
 }
-function addSymbol(symbol, type, on='both', view=undefined) {
+function addMark(symbol, type, on='both', view=undefined) {
   if (view === undefined)
     view = symbol;
   SymbolTrieInsert(symbol, {
@@ -32,8 +32,8 @@ function mkTextObj(text) {
     scale: 1
   };
 }
-addSymbolType('LINEBREAK', '-BR');
-addSymbol('\n', 'LINEBREAK', '');
+addMarkType('LINEBREAK', '-BR');
+addMark('\n', 'LINEBREAK', '');
 
 
 function toHTML(str) {
@@ -47,7 +47,7 @@ function toHTML(str) {
 }
 function mkSpanStr(inner, startIdx, endIdx, scale, ...classList) {
   classList = (classList || []).join(' ');
-  let classString = `class="${getSymbolClass('INIT')} ${classList}"`;
+  let classString = `class="${getMarkClass('INIT')} ${classList}"`;
   let data = (`data-start="${startIdx}" ` +
               `data-end="${endIdx}" ` +
               `data-scale="${scale}"` +
@@ -67,7 +67,7 @@ function updateTypeAmount(typeAmount, currType, on) {
   for (let [type_act, amount] of typeAmount) {
     let [type, act] = type_act.split('@');
     if (amount > 0)
-      classList.push(getSymbolClass(type));
+      classList.push(getMarkClass(type));
     
     if (act === 'lead' && amount > 0) {
       addTypeAmount(typeAmount, type, 'lead', -1);
@@ -111,13 +111,13 @@ function* spanStrGenerator(charGen) {
       if (on === 'lead')
         bound = on;
       
-      let symbolClass = getSymbolClass(type);
+      let symbolClass = getMarkClass(type);
       let classList = updateTypeAmount(typeAmount, type, bound);
       yield spanStr(`${symbolClass}-${bound}`,
-                    getSymbolClass('SYMBOL'), ...classList);
+                    getMarkClass('SYMBOL'), ...classList);
     } else {
       let classList = updateTypeAmount(typeAmount);
-      yield spanStr(getSymbolClass('TEXT'), ...classList);
+      yield spanStr(getMarkClass('TEXT'), ...classList);
     }
     
     startIdx = endIdx;

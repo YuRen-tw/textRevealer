@@ -74,16 +74,16 @@ Text Revealer 是一個讓人顯示文字的工具。
 | 漢字單引號 | `「`    | `」`    |         | `-cjkq`         |
 | 漢字雙引號 | `『`    | `』`    |         | `-cjkq`         |
 
-### 自定義符號
-利用下列的 JavaScript 方法來自定義符號。
+### 自定義標記
+利用下列的 JavaScript 方法來自定義標記。
 
-#### 1. `addSymbolType(type, className)`
-  - **type** - 符號的分類。
+#### 1. `addMarkType(type, className)`
+  - **type** - 標記的分類。
   - **className** _(String)_ - HTML class 名稱。
 
-#### 2. `addSymbol(symbol, type, on='both', view=undefined)`
-  - **symbol** _(String)_ - 使用者輸入的文字。
-  - **type** -  符號的分類。
+#### 2. `addMark(symbol, type, on='both', view=undefined)`
+  - **symbol** _(String)_ - 使用者輸入的符號。
+  - **type** -  標記的分類。
   - **on** - 符號包在文字的哪一邊。
     - `'both'`, `'start'`, `'end'`, `'lead'`
     - 預設：`'both'`
@@ -97,8 +97,8 @@ Text Revealer 是一個讓人顯示文字的工具。
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addSymbolType('DOLLARSIGN', '-dollarsign');
-  addSymbol('$$', 'DOLLARSIGN');
+  addMarkType('DOLLARSIGN', '-dollarsign');
+  addMark('$$', 'DOLLARSIGN');
 </script>
 ```
 
@@ -109,9 +109,9 @@ Text Revealer 是一個讓人顯示文字的工具。
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addSymbolType('GUILLEMET', '-guillemet');
-  addSymbol('«', 'GUILLEMET', 'start');
-  addSymbol('»', 'GUILLEMET', 'end');
+  addMarkType('GUILLEMET', '-guillemet');
+  addMark('«', 'GUILLEMET', 'start');
+  addMark('»', 'GUILLEMET', 'end');
 </script>
 ```
 
