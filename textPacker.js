@@ -16,7 +16,7 @@ function getMarkClass(type) {
 function addMark(symbol, type, on='both', view=undefined) {
   if (view === undefined)
     view = symbol;
-  SymbolTrieInsert(symbol, {
+  addSymbol(symbol, {
     type: type,
     on: on,
     raw: symbol,
@@ -100,17 +100,14 @@ function* spanStrGenerator(charGen) {
   let startIdx = 0;
   
   for (let textObj of textObjGen(charGen, mkTextObj)) {
-    let type = textObj.type;
-    let inner = textObj.view;
     let endIdx = startIdx + textObj.raw.length;
-    let scale = textObj.scale;
     let spanStr = (...classList) =>
-      mkSpanStr(inner, startIdx, endIdx, scale, ...classList);
+      mkSpanStr(textObj.view, startIdx, endIdx, textObj.scale, ...classList);
     
-    if (type !== 'TEXT') {
+    if (textObj.type !== 'TEXT') {
       let on = textObj.on;
       let act = on === 'lead' ? 'lead' : 'normal';
-      let amount = typeAmount.get(`${type}@${act}`) || 0;
+      let amount = typeAmount.get(`${textObj.type}@${act}`) || 0;
       
       let bound = '';
       if (on === 'start' ||
@@ -122,8 +119,8 @@ function* spanStrGenerator(charGen) {
       if (on === 'lead')
         bound = on;
       
-      let symbolClass = getMarkClass(type);
-      let classList = updateTypeAmount(typeAmount, type, bound);
+      let symbolClass = getMarkClass(textObj.type);
+      let classList = updateTypeAmount(typeAmount, textObj.type, bound);
       yield spanStr(`${symbolClass}-${bound}`,
                     getMarkClass('SYMBOL'), ...classList);
     } else {

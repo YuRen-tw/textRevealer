@@ -12,57 +12,59 @@ function* enumerate(iterable, start=0) {
 }
 
 const SymbolTrie = new Map();
+const SymbolMap = new Map();
 
-function SymbolTrieInsert(symbol, item) {
+function addSymbol(symbol, item) {
+  SymbolMap.set(symbol, item);
+  
   let Trie = SymbolTrie;
   for (let char of symbol) {
     if (!Trie.has(char))
       Trie.set(char, new Map());
     Trie = Trie.get(char);
   }
-  Trie.set('END', [symbol.length, item]);
+  Trie.set('END', symbol);
 }
 
 function* textObjGen(charGen, mkTextObj) {
   let charList = [];
-  let bList = [];  // [[start, alive, currEND, branch], ...]
-  let yieldStartIdx = 0;
+  let branchList = [];
+  let charListHeadIdx = 0;
   
   charGen = addEndOf(charGen, '');
   for (let [charIdx, char] of enumerate(charGen)) {
-    let yieldMode = false;
     charList.push(char);
     
     if (SymbolTrie.has(char))
-      bList.push([charIdx, true, undefined, SymbolTrie]);
-    for (let [bIdx, [start, alive, currEND, branch]] of enumerate(bList)) {
-      if (!alive) continue;
+      branchList.push({
+        currTrie: SymbolTrie,
+        END: undefined,
+        startIdx: charIdx,
+        alive: true
+      });
+    for (let [bIdx, branch] of enumerate(branchList)) {
+      if (!branch.alive) continue;
       
-      if (branch.has(char)) {
-        bList[bIdx][3] = branch = branch.get(char);
-        if (branch.has('END')) {
-          bList[bIdx][2] = currEND = branch.get('END');
-          bList.splice(bIdx + 1);
+      if (branch.currTrie.has(char)) {
+        branch.currTrie = branch.currTrie.get(char);
+        if (branch.currTrie.has('END')) {
+          branch.END = branch.currTrie.get('END');
+          branchList.splice(bIdx + 1);
         }
       } else {
-        bList[bIdx][1] = alive = false;
-        if (bIdx === 0)
-          yieldMode = true;
+        branch.alive = false;
       }
     }
     
-    while (yieldMode && bList.length) {
-      let [start, alive, currEND, branch] = bList[0];
-      if (alive) break;
-      bList.shift();
-      if (currEND === undefined) continue;
-      let len = currEND[0];
-      let textList = charList.splice(0, start - yieldStartIdx);
-      let symbolList = charList.splice(0, len);
-      yieldStartIdx = start + len;
-      if (textList.length)
-        yield mkTextObj(textList.join(''));
-      yield currEND[1];
+    while (branchList.length && !branchList[0].alive) {
+      let branch = branchList.shift();
+      if (branch.END === undefined) continue;
+      let textLength = branch.startIdx - charListHeadIdx;
+      if (textLength > 0)
+        yield mkTextObj(charList.splice(0, textLength).join(''));
+      charList.splice(0, branch.END.length);
+      charListHeadIdx = branch.startIdx + branch.END.length;
+      yield SymbolMap.get(branch.END);
     }
   }
   yield mkTextObj(charList.join(''));

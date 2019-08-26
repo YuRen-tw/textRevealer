@@ -20,8 +20,7 @@
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addMark('{', 'GROUP', 'start');
-  addMark('}', 'GROUP', 'end');
+  addMarkBetween('GROUP', '{', '}');
   
   addMarkType('NUMBERSIGN', '-numsign');
   addMarkType('NUMBERSIGN_2', '-numsign2');
@@ -54,7 +53,7 @@
   addMarkBetween('PARENTHESIS', '(', ')');
   
   addMarkType('BRACKET', '-bracket');
-  addMark('BRACKET', '[', ']');
+  addMarkBetween('BRACKET', '[', ']');
   
   addMarkType('ANGLE', '-angle');
   addMarkBetween('ANGLE', '<', '>');

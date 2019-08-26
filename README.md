@@ -96,7 +96,7 @@ Use the JavaScript methods listed below to customize marks.
   - **closingSymbol** _(String)_ - The closing symbol.
     - default: `undefined`, will be the same as **openingSymbol**.
 
-#### 4. `addMark(type, leadingSymbol)`
+#### 4. `addMarkAfter(type, leadingSymbol)`
   - **type** -  Classification of the mark.
   - **leadingSymbol** _(String)_ - The leading symbol.
 

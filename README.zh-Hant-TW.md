@@ -96,7 +96,7 @@ Text Revealer 是一個讓人顯示文字的工具。
   - **closingSymbol** _(String)_ - 結束符號。
     - 預設：`undefined`，會跟 **openingSymbol** 一樣。
 
-#### 4. `addMark(type, leadingSymbol)`
+#### 4. `addMarkAfter(type, leadingSymbol)`
   - **type** -  標記的分類。
   - **leadingSymbol** _(String)_ - 領頭符號。
 
