@@ -64,10 +64,7 @@ body {
   color: rgba(255, 255, 255, .9);
 }
 
-.tag.-SYMBOL {
-  font-size: .9em;
-  opacity: .5;
-}
+.tag.-SYMBOL { opacity: .5; }
   
 .tag.-numsign {
   font-size: 2em;
@@ -77,6 +74,8 @@ body {
   font-size: 1.5em;
   font-weight: 700;
 }
+
+.tag.-at, .tag.-at-start { color: #2196f3; }
 
 .tag.-ast, .tag.-ast3 { font-style: italic; }
 .tag.-ast2, .tag.-ast3 { font-weight: bold; }
@@ -96,10 +95,10 @@ body {
   font-style: normal;
   font-weight: normal;
   text-decoration: none;
-  background-color: rgba(253, 197, 101, 0.2);
+  background-color: rgba(253, 197, 101, .2);
 }
   .tag.-grave.-SELECT, .tag.-grave-start.-SELECT, .tag.-grave-end.-SELECT {
-    background-color: rgba(246, 183, 99, 0.5);
+    background-color: rgba(246, 183, 99, .5);
     color: #61574c;
   }
 

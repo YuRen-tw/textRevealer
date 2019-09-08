@@ -20,47 +20,32 @@
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addMarkBetween('GROUP', '{', '}');
+  addMarkAfter('-numsign', '#');
+  addMarkAfter('-numsign2', '##');
   
-  addMarkType('NUMBERSIGN', '-numsign');
-  addMarkType('NUMBERSIGN_2', '-numsign2');
-  addMarkAfter('NUMBERSIGN', '#');
-  addMarkAfter('NUMBERSIGN_2', '##');
+  addMarkAfter('-at', '@', true);
   
-  addMarkType('ASTERISK', '-ast');
-  addMarkType('ASTERISK_2', '-ast2');
-  addMarkType('ASTERISK_3', '-ast3');
-  addMarkBetween('ASTERISK', '*');
-  addMarkBetween('ASTERISK_2', '**');
-  addMarkBetween('ASTERISK_3', '***');
+  addMarkBetween('-ast', '*');
+  addMarkBetween('-ast2', '**');
+  addMarkBetween('-ast3', '***');
   
-  addMarkType('DBLQUOTE', '-dblq');
-  addMarkBetween('DBLQUOTE', '"');
+  addMarkBetween('-dblq', '"');
   
-  addMarkType('GRAVE', '-grave');
-  addMarkBetween('GRAVE', '`');
+  addMarkBetween('-grave', '`');
   
-  addMarkType('UNDERSCORE', '-under');
-  addMarkBetween('UNDERSCORE', '__');
+  addMarkBetween('-under', '__');
   
-  addMarkType('HYPHEN', '-hyphen');
-  addMarkBetween('HYPHEN', '--');
+  addMarkBetween('-hyphen', '--');
+  addMarkBetween('-tilde', '~~');
   
-  addMarkType('TILDE', '-tilde');
-  addMarkBetween('TILDE', '~~');
+  addMarkBetween('-paren', '(', ')');
   
-  addMarkType('PARENTHESIS', '-paren');
-  addMarkBetween('PARENTHESIS', '(', ')');
+  addMarkBetween('-bracket', '[', ']');
   
-  addMarkType('BRACKET', '-bracket');
-  addMarkBetween('BRACKET', '[', ']');
+  addMarkBetween('-angle', '<', '>');
   
-  addMarkType('ANGLE', '-angle');
-  addMarkBetween('ANGLE', '<', '>');
-  
-  addMarkType('CJKQUOTE', '-cjkq');
-  addMarkBetween('CJKQUOTE', '「', '」');
-  addMarkBetween('CJKQUOTE', '『', '』');
+  addMarkBetween('-cjkq', '「', '」');
+  addMarkBetween('-cjkq', '『', '』');
 </script>
 
 </body>
