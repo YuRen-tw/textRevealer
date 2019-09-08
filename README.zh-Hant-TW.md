@@ -23,16 +23,15 @@ Text Revealer 是一個讓人顯示文字的工具。
 | 漢字單引號 | `「`    | `」`    | 襯線字體 |
 | 漢字雙引號 | `『`    | `』`    | 襯線字體 |
 
-或在「文字塊」前方加入下列符號。
+或在一段文字前加入下列符號。
 
-| 符號       | 領頭    | 樣式                          |
-| ---------- | :-----: | ----------------------------- |
-| 井字號     | `#`     | 標題（大小：2em、字重：900）   |
-| 井字號 × 2 | `##`    | 標題（大小：1.5em、字重：700） |
+| 符號       | 領頭    | 樣式                     |
+| ---------- | :-----: | ------------------------ |
+| 井字號     | `#`     | 大小 `2em`、字重 `900`   |
+| 井字號 × 2 | `##`    | 大小 `1.5em`、字重 `700` |
+| At 號      | `@`     | 藍色文字                 |
 
-> 「文字塊」是：
->    1. 一段文字，但不包含符號與換行
->    2. 由群組符號（`GROUP`）包住的文字
+> At 號 `@` 也可以用空白結束。
 
 ### 文字直書
 按下 `Tab` 鍵在橫書與直書中切換。
@@ -47,80 +46,69 @@ Text Revealer 是一個讓人顯示文字的工具。
 * 被包住的文字：`-name`
 * 開始符號：`-name-start`
 * 結束符號：`-name-end`
-* 領頭符號：`-name-lead`
-
-> 領頭符號只會影響到**緊鄰**在後的「文字塊」。
+* 領頭符號：`-name-start`
+* 領頭符號之後的換行（或空白）：`-name-end`
 
 其中，`-name` 是符號的 HTML class 名稱。
 
 下列是預設的符號的 HTML Class 名稱：
 
-| 符號       | 開始    | 結束    | 領頭    | HTML Class 名稱 |
-| ---------- | :-----: | :-----: | :-----: | --------------- |
-| 群組 GROUP | `{`     | `}`     |         | `-G`            |
-| 井字號     |         |         | `#`     | `-numsign`      |
-| 井字號 × 2 |         |         | `##`    | `-numsign2`     |
-| 星號       | `*`     | `*`     |         | `-ast`          |
-| 星號 × 2   | `**`    | `**`    |         | `-ast2`         |
-| 星號 × 3   | `***`   | `***`   |         | `-ast3`         |
-| 雙引號     | `"`     | `"`     |         | `-dblq`         |
-| 反引號     | `` ` `` | `` ` `` |         | `-grave`        |
-| 底線 × 2   | `__`    | `__`    |         | `-under`        |
-| 連字號 × 2 | `--`    | `--`    |         | `-hyphen`       |
-| 波浪號 × 2 | `~~`    | `~~`    |         | `-tilde`        |
-| 圓括號     | `(`     | `)`     |         | `-paren`        |
-| 方括號     | `[`     | `]`     |         | `-bracket`      |
-| 角括號     | `<`     | `>`     |         | `-angle`        |
-| 漢字單引號 | `「`    | `」`    |         | `-cjkq`         |
-| 漢字雙引號 | `『`    | `』`    |         | `-cjkq`         |
+| 符號       | 開始    | 結束    | HTML Class 名稱 |
+| ---------- | :-----: | :-----: | --------------- |
+| 星號       | `*`     | `*`     | `-ast`          |
+| 星號 × 2   | `**`    | `**`    | `-ast2`         |
+| 星號 × 3   | `***`   | `***`   | `-ast3`         |
+| 雙引號     | `"`     | `"`     | `-dblq`         |
+| 反引號     | `` ` `` | `` ` `` | `-grave`        |
+| 底線 × 2   | `__`    | `__`    | `-under`        |
+| 連字號 × 2 | `--`    | `--`    | `-hyphen`       |
+| 波浪號 × 2 | `~~`    | `~~`    | `-tilde`        |
+| 圓括號     | `(`     | `)`     | `-paren`        |
+| 方括號     | `[`     | `]`     | `-bracket`      |
+| 角括號     | `<`     | `>`     | `-angle`        |
+| 漢字單引號 | `「`    | `」`    | `-cjkq`         |
+| 漢字雙引號 | `『`    | `』`    | `-cjkq`         |
+| 井字號     | `#`     |         | `-numsign`      |
+| 井字號 × 2 | `##`    |         | `-numsign2`     |
+| At 號      | `@`     |         | `-at`           |
 
-### 自定義標記
-利用下列的 JavaScript 方法來自定義標記。
+### 自定義符號與標記
+利用下列的 JavaScript 方法來自定義符號與標記。
 
-#### 1. `addMarkType(type, className)`
-  - **type** - 標記的分類。
-  - **className** _(String)_ - HTML class 名稱。
-
-#### 2. `addMark(symbol, type, on='both', view=undefined)`
+#### 1. `addSymbol(symbol, view)`
+  - 新增一個符號到 textMarker 分析器。
   - **symbol** _(String)_ - 使用者輸入的符號。
-  - **type** -  標記的分類。
-  - **on** - 符號包在文字的哪一邊。
-    - `'both'`, `'start'`, `'end'`, `'lead'`
-    - 預設：`'both'`
-  - **view** _(String)_ - 顯示的文字。
-    - 預設：`undefined`，會跟 **symbol** 一樣。
+  - **view** _(String)_ - 使用者看見的符號。
+    - 預設：`undefined`，這個符號會顯示得跟 **symbol** 一樣。
 
-#### 3. `addMarkBetween(type, openingSymbol, closingSymbol=undefined)`
-  - **type** -  標記的分類。
-  - **openingSymbol** _(String)_ - 開始符號。
-  - **closingSymbol** _(String)_ - 結束符號。
-    - 預設：`undefined`，會跟 **openingSymbol** 一樣。
+#### 2. `setSymbolView(symbol, view)`
+  - 設定符號的外觀。
+  - **symbol** _(String)_ - 使用者輸入的符號。
+  - **view** _(String)_ - 使用者看見的符號。
 
-#### 4. `addMarkAfter(type, leadingSymbol)`
-  - **type** -  標記的分類。
-  - **leadingSymbol** _(String)_ - 領頭符號。
+#### 3. `addMarkBetween(mark, opening, closing)`
+  - 新增一個標記到 textMarker 分析器。
+  - **mark** _(String)_ - 標記的 HTML class 名稱。
+  - **opening** _(String)_ - 開始的符號。
+  - **closing** _(String)_ - 結束的符號。
+    - 預設：`undefined`，會跟 **opening** 一樣。
 
-例如，要加入 `$$` 做為包在文字兩邊的符號，我們需要加入兩行 JS 程式碼（在 `textRevealer.js` 的引用之後），像是：
+#### 4. `addMarkAfter(mark, leading, closedBySpace)`
+  - 新增一個標記到 textMarker 分析器。
+  - **mark** _(String)_ - 標記的 HTML class 名稱。
+  - **leading** _(String)_ - 領頭的符號。
+  - **closedBySpace** _(Bool)_ - 這個標記也可以用空白結束。
+    - 預設：`false`，這個標記只能用換行結束。
 
-```HTML
-<script src="./textMarker.js"></script>
-<script src="./textPacker.js"></script>
-<script src="./textRevealer.js"></script>
-<script>
-  addMarkType('DOLLARSIGN', '-dollarsign');
-  addMarkBetween('DOLLARSIGN', '$$');
-</script>
-```
 
-而要加入 `«` 和 `»` 做為包在文字兩邊的符號，我們需要加入兩行 JS 程式碼，像是：
+例如，要加入一個將文字包在 `«` 和 `»` 之間的標記，我們需要加入一行 JS 程式碼（在 `textRevealer.js` 的引用之後），像是：
 
 ```HTML
 <script src="./textMarker.js"></script>
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addMarkType('GUILLEMET', '-guillemet');
-  addMarkBetween('GUILLEMET', '«', '»');
+  addMarkBetween('-guillemet', '«', '»');
 </script>
 ```
 

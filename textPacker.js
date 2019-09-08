@@ -29,11 +29,7 @@ function addSymbol(symbol, view=undefined) {
     setSymbolView(symbol, view);
   mkSymbol(symbol);
 }
-function addMarkBetween(mark, opening, closing, openingView, closingView) {
-  if (openingView !== undefined)
-    setSymbolView(opening, openingView);
-  if (closingView !== undefined)
-    setSymbolView(closing, closingView);
+function addMarkBetween(mark, opening, closing=undefined) {
   mkMarkBetween(mark, opening, closing);
 }
 function addMarkAfter(mark, leading, closedBySpace=false) {

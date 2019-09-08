@@ -23,16 +23,15 @@ Wrap text by the symbols listed below to add style to the text.
 | CJK quote      | `「`    | `」`    | Serif        |
 | CJK quote      | `『`    | `』`    | Serif        |
 
-Or add the symbols listed below in front of a "bolck of text".
+Or add the symbols listed below in front of a line of words.
 
-| Symbol          | Leading | Style                             |
-| --------------- | :-----: | --------------------------------- |
-| Number sign     | `#`     | Header (size: 2em, weight: 900)   |
-| Number sign × 2 | `##`    | Header (size: 1.5em, weight: 700) |
+| Symbol          | Leading | Style                      |
+| --------------- | :-----: | -------------------------- |
+| Number sign     | `#`     | `2em` size, weight `900`   |
+| Number sign × 2 | `##`    | `1.5em` size, weight `700` |
+| At sign         | `@`     | Blue text                  |
 
-> A block of text is:
->    1. line of text excluding symbols and line break
->    2. text wrapped by `GROUP` symbols
+> At sign `@` can also be closed by a space.
 
 ### Vertical Writing Direction
 Press `Tab` key to switch writing direction between horizontal and vertical (vertical-RL).
@@ -47,80 +46,68 @@ Those HTML class names are in the form of:
 * Wrapped text: `-name`
 * Opening symbol: `-name-start`
 * Closing symbol: `-name-end`
-* Leading symbol: `-name-lead`
-
-> Leading symbol will only affect the **adjacent** "block of text" follow it.
+* Leading symbol: `-name-start`
+* Line break (or space) after a leading symbol: `-name-end`
 
 Where the `-name` is the HTML class name of each symbol.
 
 Here are the HTML Class names of default symbols:
 
-| Symbol          | Opening | Closing | Leading | HTML Class Name |
-| --------------- | :-----: | :-----: | :-----: | --------------- |
-| GROUP           | `{`     | `}`     |         | `-G`            |
-| Number Sign     |         |         | `#`     | `-numsign`      |
-| Number Sign × 2 |         |         | `##`    | `-numsign2`     |
-| Asterisk        | `*`     | `*`     |         | `-ast`          |
-| Asterisk × 2    | `**`    | `**`    |         | `-ast2`         |
-| Asterisk × 3    | `***`   | `***`   |         | `-ast3`         |
-| Double quote    | `"`     | `"`     |         | `-dblq`         |
-| Grave           | `` ` `` | `` ` `` |         | `-grave`        |
-| Underscore × 2  | `__`    | `__`    |         | `-under`        |
-| Hyphen × 2      | `--`    | `--`    |         | `-hyphen`       |
-| Tilde × 2       | `~~`    | `~~`    |         | `-tilde`        |
-| Parenthesis     | `(`     | `)`     |         | `-paren`        |
-| Bracket         | `[`     | `]`     |         | `-bracket`      |
-| Angle           | `<`     | `>`     |         | `-angle`        |
-| CJK quote       | `「`    | `」`    |         | `-cjkq`         |
-| CJK quote       | `『`    | `』`    |         | `-cjkq`         |
+| Symbol          | Opening | Closing | HTML Class Name |
+| --------------- | :-----: | :-----: | --------------- |
+| Asterisk        | `*`     | `*`     | `-ast`          |
+| Asterisk × 2    | `**`    | `**`    | `-ast2`         |
+| Asterisk × 3    | `***`   | `***`   | `-ast3`         |
+| Double quote    | `"`     | `"`     | `-dblq`         |
+| Grave           | `` ` `` | `` ` `` | `-grave`        |
+| Underscore × 2  | `__`    | `__`    | `-under`        |
+| Hyphen × 2      | `--`    | `--`    | `-hyphen`       |
+| Tilde × 2       | `~~`    | `~~`    | `-tilde`        |
+| Parenthesis     | `(`     | `)`     | `-paren`        |
+| Bracket         | `[`     | `]`     | `-bracket`      |
+| Angle           | `<`     | `>`     | `-angle`        |
+| CJK quote       | `「`    | `」`    | `-cjkq`         |
+| CJK quote       | `『`    | `』`    | `-cjkq`         |
+| Number Sign     | `#`     |         | `-numsign`      |
+| Number Sign × 2 | `##`    |         | `-numsign2`     |
+| At Sign         | `@`     |         | `-at`           |
 
-### Customize Mark
-Use the JavaScript methods listed below to customize marks.
+### Customize Symbol and Mark
+Use the JavaScript methods listed below to customize symbols and marks.
 
-#### 1. `addMarkType(type, className)`
-  - **type** -  Classification of the mark.
-  - **className** _(String)_ - HTML class name.
-
-#### 2. `addMark(symbol, type, on='both', view=undefined)`
+#### 1. `addSymbol(symbol, view)`
+  - Add a new symbol into the textMarker parser.
   - **symbol** _(String)_ - The symbol which people key in.
-  - **type** -  Classification of the mark.
-  - **on** - The symbol will wrap on which side.
-    - `'both'`, `'start'`, `'end'`, `'lead'`
-    - default: `'both'`
-  - **view** _(String)_ - Displayed text.
-    - default: `undefined`, will be the same as **symbol**.
+  - **view** _(String)_ - The symbol which people will see.
+    - default: `undefined`, this symbol will be displayed as same as **symbol**.
 
-#### 3. `addMarkBetween(type, openingSymbol, closingSymbol=undefined)`
-  - **type** -  Classification of the mark.
-  - **openingSymbol** _(String)_ - The opening symbol.
-  - **closingSymbol** _(String)_ - The closing symbol.
-    - default: `undefined`, will be the same as **openingSymbol**.
+#### 2. `setSymbolView(symbol, view)`
+  - Set the view of a symbol.
+  - **symbol** _(String)_ - The symbol which people key in.
+  - **view** _(String)_ - The symbol which people will see.
 
-#### 4. `addMarkAfter(type, leadingSymbol)`
-  - **type** -  Classification of the mark.
-  - **leadingSymbol** _(String)_ - The leading symbol.
+#### 3. `addMarkBetween(mark, opening, closing)`
+  - Add a new mark into the textMarker parser.
+  - **mark** _(String)_ - HTML class name of the mark.
+  - **opening** _(String)_ - The opening symbol.
+  - **closing** _(String)_ - The closing symbol.
+    - default: `undefined`, will be the same as **opening**.
 
-For example, to add `$$` as a symbol on both side of text, we need add two lines of JS code (after the reference of `textRevealer.js`) like:
+#### 4. `addMarkAfter(mark, leading, closedBySpace)`
+  - Add a new mark into the textMarker parser.
+  - **mark** _(String)_ - HTML class name of the mark.
+  - **leading** _(String)_ - The leading symbol.
+  - **closedBySpace** _(Bool)_ - This mark can also be closed by a space.
+    - default: `false`, this mark can only be closed by a line break.
 
-```HTML
-<script src="./textMarker.js"></script>
-<script src="./textPacker.js"></script>
-<script src="./textRevealer.js"></script>
-<script>
-  addMarkType('DOLLARSIGN', '-dollarsign');
-  addMarkBetween('DOLLARSIGN', '$$');
-</script>
-```
-
-And, to add `«` and `»` as symbols on both side of text, we need add two lines of JS code like:
+For example, to add a mark where the text is in between `«` and `»`, we need add one line of JS code (after the reference of `textRevealer.js`) like:
 
 ```HTML
 <script src="./textMarker.js"></script>
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addMarkType('GUILLEMET', '-guillemet');
-  addMarkBetween('GUILLEMET', '«', '»');
+  addMarkBetween('-guillemet', '«', '»');
 </script>
 ```
 
