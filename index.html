@@ -20,53 +20,32 @@
 <script src="./textPacker.js"></script>
 <script src="./textRevealer.js"></script>
 <script>
-  addSymbol('{', 'GROUP', 'start');
-  addSymbol('}', 'GROUP', 'end');
+  addMarkAfter('-numsign', '#');
+  addMarkAfter('-numsign2', '##');
   
-  addSymbolType('NUMBERSIGN', '-numsign');
-  addSymbolType('NUMBERSIGN_2', '-numsign2');
-  addSymbol('#', 'NUMBERSIGN', 'lead');
-  addSymbol('##', 'NUMBERSIGN_2', 'lead');
+  addMarkAfter('-at', '@', true);
   
-  addSymbolType('ASTERISK', '-ast');
-  addSymbolType('ASTERISK_2', '-ast2');
-  addSymbolType('ASTERISK_3', '-ast3');
-  addSymbol('*', 'ASTERISK', 'both');
-  addSymbol('**', 'ASTERISK_2', 'both');
-  addSymbol('***', 'ASTERISK_3', 'both');
+  addMarkBetween('-ast', '*');
+  addMarkBetween('-ast2', '**');
+  addMarkBetween('-ast3', '***');
   
-  addSymbolType('DBLQUOTE', '-dblq');
-  addSymbol('"', 'DBLQUOTE', 'both');
+  addMarkBetween('-dblq', '"');
   
-  addSymbolType('GRAVE', '-grave');
-  addSymbol('`', 'GRAVE', 'both');
+  addMarkBetween('-grave', '`');
   
-  addSymbolType('UNDERSCORE', '-under');
-  addSymbol('__', 'UNDERSCORE', 'both');
+  addMarkBetween('-under', '__');
   
-  addSymbolType('HYPHEN', '-hyphen');
-  addSymbol('--', 'HYPHEN', 'both');
+  addMarkBetween('-hyphen', '--');
+  addMarkBetween('-tilde', '~~');
   
-  addSymbolType('TILDE', '-tilde');
-  addSymbol('~~', 'TILDE', 'both');
+  addMarkBetween('-paren', '(', ')');
   
-  addSymbolType('PARENTHESIS', '-paren');
-  addSymbol('(', 'PARENTHESIS', 'start');
-  addSymbol(')', 'PARENTHESIS', 'end');
+  addMarkBetween('-bracket', '[', ']');
   
-  addSymbolType('BRACKET', '-bracket');
-  addSymbol('[', 'BRACKET', 'start');
-  addSymbol(']', 'BRACKET', 'end');
+  addMarkBetween('-angle', '<', '>');
   
-  addSymbolType('ANGLE', '-angle');
-  addSymbol('<', 'ANGLE', 'start');
-  addSymbol('>', 'ANGLE', 'end');
-  
-  addSymbolType('CJKQUOTE', '-cjkq');
-  addSymbol('「', 'CJKQUOTE', 'start');
-  addSymbol('」', 'CJKQUOTE', 'end');
-  addSymbol('『', 'CJKQUOTE', 'start');
-  addSymbol('』', 'CJKQUOTE', 'end');
+  addMarkBetween('-cjkq', '「', '」');
+  addMarkBetween('-cjkq', '『', '』');
 </script>
 
 </body>
