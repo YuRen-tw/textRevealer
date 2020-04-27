@@ -75,30 +75,29 @@ Here are the HTML Class names of default symbols:
 ### Customize Symbol and Mark
 Use the JavaScript methods listed below to customize symbols and marks.
 
-#### 1. `addSymbol(symbol, view)`
-  - Add a new symbol into the textMarker parser.
-  - **symbol** _(String)_ - The symbol which people key in.
-  - **view** _(String)_ - The symbol which people will see.
-    - default: `undefined`, this symbol will be displayed as same as **symbol**.
-
-#### 2. `setSymbolView(symbol, view)`
-  - Set the view of a symbol.
-  - **symbol** _(String)_ - The symbol which people key in.
-  - **view** _(String)_ - The symbol which people will see.
-
-#### 3. `addMarkBetween(mark, opening, closing)`
+#### 1. `addMarkOnly(mark, symbol)`
   - Add a new mark into the textMarker parser.
-  - **mark** _(String)_ - HTML class name of the mark.
-  - **opening** _(String)_ - The opening symbol.
-  - **closing** _(String)_ - The closing symbol.
+  - **mark** (_String_) - HTML class name of the mark.
+  - **symbol** (_String_) - The symbol.
+
+#### 2. `addMarkBetween(mark, opening, closing)`
+  - Add a new mark into the textMarker parser.
+  - **mark** (_String_) - HTML class name of the mark.
+  - **opening** (_String_) - The opening symbol.
+  - **closing** (_String_) - The closing symbol.
     - default: `undefined`, will be the same as **opening**.
 
-#### 4. `addMarkAfter(mark, leading, closedBySpace)`
+#### 3. `addMarkAfter(mark, leading, closedBySpace)`
   - Add a new mark into the textMarker parser.
-  - **mark** _(String)_ - HTML class name of the mark.
-  - **leading** _(String)_ - The leading symbol.
+  - **mark** (_String_) - HTML class name of the mark.
+  - **leading** (_String_) - The leading symbol.
   - **closedBySpace** _(Bool)_ - This mark can also be closed by a space.
     - default: `false`, this mark can only be closed by a line break.
+
+#### 4. `setSymbolView(symbol, view)`
+  - Set the view of a symbol.
+  - **symbol** (_String_) - The symbol which people key in.
+  - **view** (_String_) - The symbol which people will see.
 
 For example, to add a mark where the text is in between `«` and `»`, we need add one line of JS code (after the reference of `textRevealer.js`) like:
 

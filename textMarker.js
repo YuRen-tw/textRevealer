@@ -15,58 +15,66 @@ const SymbolTrie = new Map();
 const SymbolMap = new Map();
 const MarkMap = new Map();
 
-function mkSymbol(symbol) {
-  if (SymbolMap.has(symbol)) return;
-  SymbolMap.set(symbol, {
-    isSymbol: true,
-    canOpening: false,
-    canClosing: false,
-    multipleClosing: false,
-    content: symbol
-  });
-  
-  let Trie = SymbolTrie;
-  for (let char of symbol) {
-    if (!Trie.has(char))
-      Trie.set(char, new Map());
-    Trie = Trie.get(char);
+function letSymbol(symbol) {
+  if (!SymbolMap.has(symbol)) {
+    SymbolMap.set(symbol, {
+      isSymbol: true,
+      opening: false,
+      closing: false,
+      multiClosing: false,
+      alone: false
+    });
+    
+    let Trie = SymbolTrie;
+    for (let char of symbol) {
+      if (!Trie.has(char))
+        Trie.set(char, new Map());
+      Trie = Trie.get(char);
+    }
+    Trie.set('END', symbol);
   }
-  Trie.set('END', symbol);
+  return SymbolMap.get(symbol);
 }
-function mkMarkBetween(mark, opening, closing, canClosingMultiple) {
-  if (closing === undefined)
-    closing = opening;
-  
-  mkSymbol(opening);
-  mkSymbol(closing);
-  SymbolMap.get(opening).canOpening = true;
-  SymbolMap.get(closing).canClosing = true;
-  
-  if (canClosingMultiple)
-    SymbolMap.get(closing).multipleClosing = true;
-  
-  if (!MarkMap.has(opening))
-    MarkMap.set(opening, {
+function letMark(mark, symbol) {
+  if (!MarkMap.has(symbol))
+    MarkMap.set(symbol, {
       mark: mark,
       closedBy: []
     });
-  MarkMap.get(opening).closedBy.push(closing);
+  return MarkMap.get(symbol);
+}
+function mkMarkOnly(mark, symbol) {
+  letSymbol(symbol).alone = true;
+  letMark(mark, symbol);
+}
+function mkMarkBetween(mark, opening, closing, multiClosing) {
+  if (closing === undefined)
+    closing = opening;
+  
+  letSymbol(opening).opening = true;
+  letSymbol(closing).closing = true;
+  if (multiClosing)
+    letSymbol(closing).multiClosing = true;
+  letMark(mark, opening).closedBy.push(closing);
 }
 
-function mkTextObj(text) {
+function mkTextObj(content, startIdx, isSymbol=false) {
   return {
-    isSymbol: false,
-    content: text,
+    isSymbol: isSymbol,
+    content: content,
+    startIdx: startIdx,
+    endIdx: startIdx + content.length,
+    length: content.length
   };
 }
-function* textObjGen(charGen) {
-  let charList = [];
+function* textObjGenerator(charGenerator) {
+  let temp = [];
+  let tempHeadIdx = 0;
   let branchList = [];
-  let charListHeadIdx = 0;
   
-  charGen = addEndOf(charGen, '');
-  for (let [charIdx, char] of enumerate(charGen)) {
-    charList.push(char);
+  charGenerator = addEndOf(charGenerator, '');
+  for (let [charIdx, char] of enumerate(charGenerator)) {
+    temp.push(char);
     
     if (SymbolTrie.has(char))
       branchList.push({
@@ -92,15 +100,16 @@ function* textObjGen(charGen) {
     while (branchList.length && !branchList[0].alive) {
       let branch = branchList.shift();
       if (branch.END === undefined) continue;
-      let textLength = branch.startIdx - charListHeadIdx;
-      if (textLength > 0)
-        yield mkTextObj(charList.splice(0, textLength).join(''));
-      charList.splice(0, branch.END.length);
-      charListHeadIdx = branch.startIdx + branch.END.length;
-      yield SymbolMap.get(branch.END);
+      if (branch.startIdx > tempHeadIdx) {
+        let text = temp.splice(0, branch.startIdx - tempHeadIdx).join('')
+        yield mkTextObj(text, tempHeadIdx);
+      }
+      temp.splice(0, branch.END.length);
+      tempHeadIdx = branch.startIdx + branch.END.length;
+      yield mkTextObj(branch.END, branch.startIdx, true);
     }
   }
-  yield mkTextObj(charList.join(''));
+  yield mkTextObj(temp.join(''), tempHeadIdx);
 }
 
 
@@ -120,22 +129,23 @@ function addMarkAmount(markAmount, opening, add) {
 }
 
 function mkTextMark(textObj, marks) {
-  return {
-    isSymbol: textObj.isSymbol,
-    content: textObj.content,
-    marks: marks
-  }
+  textObj.marks = marks;
+  return textObj;
 }
-function* textMarkGenerator(charGen) {
+function* textMarkGenerator(charGenerator) {
   let markAmount = new Map();
   let markStack = [];
   
-  for (let textObj of textObjGen(charGen)) {
+  for (let textObj of textObjGenerator(charGenerator)) {
     if (textObj.isSymbol) {
       let markList = [];
       let done = false;
+      let symbolData = SymbolMap.get(textObj.content);
       
-      if (textObj.canClosing) {
+      if (symbolData.alone) {
+        markList.push(`${MarkMap.get(textObj.content).mark}`);
+      }
+      if (symbolData.closing) {
         let closing = textObj.content;
         let notYetClosedMarkStack = [];
         while (!done && markStack.length > 0) {
@@ -143,7 +153,7 @@ function* textMarkGenerator(charGen) {
           if (MarkMap.get(opening).closedBy.includes(closing)) {
             addMarkAmount(markAmount, opening, -1);
             markList.push(`${MarkMap.get(opening).mark}-end`);
-            if (!textObj.multipleClosing)
+            if (!symbolData.multiClosing)
               done = true;
           } else {
             notYetClosedMarkStack.unshift(opening);
@@ -154,7 +164,7 @@ function* textMarkGenerator(charGen) {
           done = true;
       }
       markList = markList.concat(getMarkList(markAmount));
-      if (!done && textObj.canOpening) {
+      if (!done && symbolData.opening) {
         let opening = textObj.content;
         markStack.push(opening);
         addMarkAmount(markAmount, opening, 1);

@@ -75,30 +75,29 @@ Text Revealer 是一個讓人顯示文字的工具。
 ### 自定義符號與標記
 利用下列的 JavaScript 方法來自定義符號與標記。
 
-#### 1. `addSymbol(symbol, view)`
-  - 新增一個符號到 textMarker 分析器。
-  - **symbol** _(String)_ - 使用者輸入的符號。
-  - **view** _(String)_ - 使用者看見的符號。
-    - 預設：`undefined`，這個符號會顯示得跟 **symbol** 一樣。
-
-#### 2. `setSymbolView(symbol, view)`
-  - 設定符號的外觀。
-  - **symbol** _(String)_ - 使用者輸入的符號。
-  - **view** _(String)_ - 使用者看見的符號。
-
-#### 3. `addMarkBetween(mark, opening, closing)`
+#### 1. `addMarkOnly(mark, symbol)`
   - 新增一個標記到 textMarker 分析器。
-  - **mark** _(String)_ - 標記的 HTML class 名稱。
-  - **opening** _(String)_ - 開始的符號。
-  - **closing** _(String)_ - 結束的符號。
+  - **mark** (_String_) - 標記的 HTML class 名稱。
+  - **symbol** (_String_) - 符號。
+
+#### 2. `addMarkBetween(mark, opening, closing)`
+  - 新增一個標記到 textMarker 分析器。
+  - **mark** (_String_) - 標記的 HTML class 名稱。
+  - **opening** (_String_) - 開始的符號。
+  - **closing** (_String_) - 結束的符號。
     - 預設：`undefined`，會跟 **opening** 一樣。
 
-#### 4. `addMarkAfter(mark, leading, closedBySpace)`
+#### 3. `addMarkAfter(mark, leading, closedBySpace)`
   - 新增一個標記到 textMarker 分析器。
-  - **mark** _(String)_ - 標記的 HTML class 名稱。
-  - **leading** _(String)_ - 領頭的符號。
+  - **mark** (_String_) - 標記的 HTML class 名稱。
+  - **leading** (_String_) - 領頭的符號。
   - **closedBySpace** _(Bool)_ - 這個標記也可以用空白結束。
     - 預設：`false`，這個標記只能用換行結束。
+
+#### 4. `setSymbolView(symbol, view)`
+  - 設定符號的外觀。
+  - **symbol** (_String_) - 使用者輸入的符號。
+  - **view** (_String_) - 使用者看見的符號。
 
 
 例如，要加入一個將文字包在 `«` 和 `»` 之間的標記，我們需要加入一行 JS 程式碼（在 `textRevealer.js` 的引用之後），像是：

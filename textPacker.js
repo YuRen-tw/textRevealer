@@ -12,22 +12,15 @@ function getHTMLClass(type) {
 const SymbolViewMap = new Map();
 
 function setSymbolView(symbol, view) {
-  SymbolViewMap.set(symbol, {
-    view: view,
-    scale: view.length / symbol.length
-  });
+  letSymbol(symbol);
+  SymbolViewMap.set(symbol, view);
 }
 function getSymbolView(symbol) {
-  return SymbolViewMap.get(symbol) || {
-    view: symbol,
-    scale: 1
-  }
+  return SymbolViewMap.get(symbol) || symbol;
 }
 
-function addSymbol(symbol, view=undefined) {
-  if (view !== undefined)
-    setSymbolView(symbol, view);
-  mkSymbol(symbol);
+function addMarkOnly(mark, symbol) {
+  mkMarkOnly(mark, symbol);
 }
 function addMarkBetween(mark, opening, closing=undefined) {
   mkMarkBetween(mark, opening, closing);
@@ -47,29 +40,22 @@ function toHTML(str) {
     .replace(/"/g, '&quot;')
   );
 }
-function mkSpanStr(inner, startIdx, endIdx, scale, ...classList) {
-  classList = (classList || []).join(' ');
-  let classString = `class="${getHTMLClass('INIT')} ${classList}"`;
-  let data = (`data-start="${startIdx}" ` +
-              `data-end="${endIdx}" ` +
-              `data-scale="${scale}"` +
+function mkSpanStr(inner, classList, textMark) {
+  let classString = `class="${(classList || []).join(' ')}"`;
+  let data = (`data-start="${textMark.startIdx}" ` +
+              `data-end="${textMark.endIdx}" ` +
+              `data-scale="${inner.length / textMark.length}"` +
               `data-content="${toHTML(inner.replace('\n', '\\n'))}"`);
   return `<span ${classString} ${data}>${toHTML(inner)}</span>`;
 }
 
-function* spanStrGenerator(charGen) {
-  let startIdx = 0;
-  for (let textMark of textMarkGenerator(charGen)) {
-    let endIdx = startIdx + textMark.content.length;
-    if (textMark.isSymbol) {
-      let symbolView = getSymbolView(textMark.content);
-      yield mkSpanStr(symbolView.view, startIdx, endIdx, symbolView.scale,
-                      getHTMLClass('SYMBOL'), ...textMark.marks);
-    } else {
-      yield mkSpanStr(textMark.content, startIdx, endIdx, 1,
-                      getHTMLClass('TEXT'), ...textMark.marks);
-    }
-    startIdx = endIdx;
+function* spanStringGenerator(charGenerator) {
+  for (let textMark of textMarkGenerator(charGenerator)) {
+    let classList = [
+      getHTMLClass('INIT'),
+      getHTMLClass(textMark.isSymbol ? 'SYMBOL' : 'TEXT')
+    ].concat(textMark.marks);
+    yield mkSpanStr(getSymbolView(textMark.content), classList, textMark);
   }
 }
 
