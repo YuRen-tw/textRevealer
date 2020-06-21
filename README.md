@@ -1,44 +1,44 @@
-# Text Revealer
-Text Revealer is a tool for people to display their text.
+# textRevealer
+![](./textRevealer.png)
 
-Just like screen-message but has more features such as styling the text.
+textRevealer is a tool to display some text.
 
 *Read this in other languages: [English](README.md), [正體中文](README.zh-Hant-TW.md)*
 
 ## Features
-### Style
-Wrap text by the symbols listed below to add style to the text.
+### Styling the text
+Wrap text by the marks listed below to style the text.
 
-| Symbol         | Opening | Closing | Style        |
-| -------------- | :-----: | :-----: | ------------ |
-| GROUP          | `{`     | `}`     | None         |
-| Asterisk       | `*`     | `*`     | Italic       |
-| Asterisk × 2   | `**`    | `**`    | Bold         |
-| Asterisk × 3   | `***`   | `***`   | Bold Italic  |
-| Double quote   | `"`     | `"`     | Serif        |
-| Grave          | `` ` `` | `` ` `` | Monospace    |
-| Underscore × 2 | `__`    | `__`    | Underline    |
-| Hyphen × 2     | `--`    | `--`    | Line-through |
-| Tilde × 2      | `~~`    | `~~`    | Line-through |
-| CJK quote      | `「`    | `」`    | Serif        |
-| CJK quote      | `『`    | `』`    | Serif        |
+| mark             | opening | closing | style        |
+| ---------------- | :-----: | :-----: | ------------ |
+| asterisk         | `*`     | `*`     | italic       |
+| asterisk × 2     | `**`    | `**`    | bold         |
+| asterisk × 3     | `***`   | `***`   | bold italic  |
+| double quote     | `"`     | `"`     | serif        |
+| grave            | `` ` `` | `` ` `` | monospace    |
+| underscore × 2   | `__`    | `__`    | underline    |
+| hyphen × 2       | `--`    | `--`    | line-through |
+| tilde × 2        | `~~`    | `~~`    | line-through |
+| CJK quote        | `「`    | `」`    | serif        |
+| CJK double quote | `『`    | `』`    | serif        |
 
-Or add the symbols listed below in front of a line of words.
+Or add the marks listed below in front of words.
 
-| Symbol          | Leading | Style                      |
-| --------------- | :-----: | -------------------------- |
-| Number sign     | `#`     | `2em` size, weight `900`   |
-| Number sign × 2 | `##`    | `1.5em` size, weight `700` |
-| At sign         | `@`     | Blue text                  |
+| mark            | leading | style                 |
+| --------------- | :-----: | --------------------- |
+| number sign     | `#`     | 2x size, weight 900   |
+| number sign × 2 | `##`    | 1.5x size, weight 700 |
+| at sign         | `@`     | blue text             |
+| caret           | `^`     | superscript           |
 
-> At sign `@` can also be closed by a space.
+> At sign `@` and caret `^` can also be closed by a space.
 
-### Vertical Writing Direction
-Press `Tab` key to switch writing direction between horizontal and vertical (vertical-RL).
+### Switching the writing direction
+Press `Tab` key to switch the writing direction between horizontal and vertical (vertical-RL).
 
 
 ## Customization
-### Customize Style
+### Changing the style
 Change the CSS of the HTML classes to customize the style.
 
 Those HTML class names are in the form of:
@@ -49,31 +49,33 @@ Those HTML class names are in the form of:
 * Leading symbol: `-name-start`
 * Line break (or space) after a leading symbol: `-name-end`
 
-Where the `-name` is the HTML class name of each symbol.
+Where the `-name` is the HTML class name of each mark.
 
-Here are the HTML Class names of default symbols:
+Here are the HTML class names of the default marks:
 
-| Symbol          | Opening | Closing | HTML Class Name |
-| --------------- | :-----: | :-----: | --------------- |
-| Asterisk        | `*`     | `*`     | `-ast`          |
-| Asterisk × 2    | `**`    | `**`    | `-ast2`         |
-| Asterisk × 3    | `***`   | `***`   | `-ast3`         |
-| Double quote    | `"`     | `"`     | `-dblq`         |
-| Grave           | `` ` `` | `` ` `` | `-grave`        |
-| Underscore × 2  | `__`    | `__`    | `-under`        |
-| Hyphen × 2      | `--`    | `--`    | `-hyphen`       |
-| Tilde × 2       | `~~`    | `~~`    | `-tilde`        |
-| Parenthesis     | `(`     | `)`     | `-paren`        |
-| Bracket         | `[`     | `]`     | `-bracket`      |
-| Angle           | `<`     | `>`     | `-angle`        |
-| CJK quote       | `「`    | `」`    | `-cjkq`         |
-| CJK quote       | `『`    | `』`    | `-cjkq`         |
-| Number Sign     | `#`     |         | `-numsign`      |
-| Number Sign × 2 | `##`    |         | `-numsign2`     |
-| At Sign         | `@`     |         | `-at`           |
+| mark             | opening | closing | HTML class name |
+| ---------------- | :-----: | :-----: | --------------- |
+| asterisk         | `*`     | `*`     | `-ast`          |
+| asterisk × 2     | `**`    | `**`    | `-ast2`         |
+| asterisk × 3     | `***`   | `***`   | `-ast3`         |
+| double quote     | `"`     | `"`     | `-dblq`         |
+| grave            | `` ` `` | `` ` `` | `-grave`        |
+| underscore × 2   | `__`    | `__`    | `-under`        |
+| hyphen × 2       | `--`    | `--`    | `-hyphen`       |
+| tilde × 2        | `~~`    | `~~`    | `-tilde`        |
+| parenthesis      | `(`     | `)`     | `-paren`        |
+| bracket          | `[`     | `]`     | `-bracket`      |
+| braces           | `{`     | `}`     | `-braces`       |
+| angle            | `<`     | `>`     | `-angle`        |
+| CJK quote        | `「`    | `」`    | `-cjkq`         |
+| CJK double quote | `『`    | `』`    | `-cjkdq`        |
+| number sign      | `#`     |         | `-numsign`      |
+| number sign × 2  | `##`    |         | `-numsign2`     |
+| at sign          | `@`     |         | `-at`           |
+| caret            | `^`     |         | `-caret`        |
 
-### Customize Symbol and Mark
-Use the JavaScript methods listed below to customize symbols and marks.
+### Changing the marks and symbols
+Use the JavaScript methods listed below to customize the marks and symbols.
 
 #### 1. `addMarkOnly(mark, symbol)`
   - Add a new mark into the textMarker parser.

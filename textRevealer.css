@@ -44,6 +44,8 @@ body {
   to { background-color: rgba(0, 0, 0, .8); }
 }
 
+.tag { display: inline-block; }
+.tag[data-content="\\n"] { display: inline; }
 #textRevealer::before, #textRevealer::after,
 .tag[data-content="\\n"]::before, .tag[data-content="\\n"]::after {
   content: "";
@@ -77,6 +79,13 @@ body {
 
 .tag.-at, .tag.-at-start { color: #2196f3; }
 
+.tag.-caret, .tag.-caret-start {
+  font-size: 0.6em;
+  transform: translateY(-0.6em);
+}
+  .tag.-caret.-numsign, .tag.-caret-start.-numsign { font-size: 1.2em; }
+  .tag.-caret.-numsign2, .tag.-caret-start.-numsign2 { font-size: 0.9em; }
+
 .tag.-ast, .tag.-ast3 { font-style: italic; }
 .tag.-ast2, .tag.-ast3 { font-weight: bold; }
 
@@ -85,7 +94,8 @@ body {
 .tag.-tilde { text-decoration: line-through; }
 
 .tag.-dblq, .tag.-dblq-start, .tag.-dblq-end,
-.tag.-cjkq, .tag.-cjkq-start, .tag.-cjkq-end {
+.tag.-cjkq, .tag.-cjkq-start, .tag.-cjkq-end,
+.tag.-cjkdq, .tag.-cjkdq-start, .tag.-cjkdq-end {
   font-family: serif;
 }
   
@@ -95,6 +105,7 @@ body {
   font-style: normal;
   font-weight: normal;
   text-decoration: none;
+  transform: none;
   background-color: rgba(253, 197, 101, .2);
 }
   .tag.-grave.-SELECT, .tag.-grave-start.-SELECT, .tag.-grave-end.-SELECT {
