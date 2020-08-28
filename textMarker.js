@@ -17,21 +17,24 @@ const MarkMap = new Map();
 
 function letSymbol(symbol) {
   if (!SymbolMap.has(symbol)) {
+    let Trie = SymbolTrie;
+    let charsLength = 0;
+    for (let char of symbol) {
+      if (!Trie.has(char))
+        Trie.set(char, new Map());
+      Trie = Trie.get(char);
+      charsLength = charsLength + 1;
+    }
+    Trie.set('END', symbol);
+    
     SymbolMap.set(symbol, {
       isSymbol: true,
       opening: false,
       closing: false,
       multiClosing: false,
-      alone: false
+      alone: false,
+      charsLength: charsLength
     });
-    
-    let Trie = SymbolTrie;
-    for (let char of symbol) {
-      if (!Trie.has(char))
-        Trie.set(char, new Map());
-      Trie = Trie.get(char);
-    }
-    Trie.set('END', symbol);
   }
   return SymbolMap.get(symbol);
 }
@@ -69,7 +72,9 @@ function mkTextObj(content, startIdx, isSymbol=false) {
 }
 function* textObjGenerator(charGenerator) {
   let temp = [];
-  let tempHeadIdx = 0;
+  let tempHead = 0;
+  let tempStartIdx = 0;
+  let strStartIdx = 0;
   let branchList = [];
   
   charGenerator = addEndOf(charGenerator, '');
@@ -80,9 +85,11 @@ function* textObjGenerator(charGenerator) {
       branchList.push({
         currTrie: SymbolTrie,
         END: undefined,
-        startIdx: charIdx,
+        startIdx: strStartIdx,
+        charsHead: charIdx,
         alive: true
       });
+    strStartIdx = strStartIdx + char.length;
     for (let [bIdx, branch] of enumerate(branchList)) {
       if (!branch.alive) continue;
       
@@ -100,16 +107,18 @@ function* textObjGenerator(charGenerator) {
     while (branchList.length && !branchList[0].alive) {
       let branch = branchList.shift();
       if (branch.END === undefined) continue;
-      if (branch.startIdx > tempHeadIdx) {
-        let text = temp.splice(0, branch.startIdx - tempHeadIdx).join('')
-        yield mkTextObj(text, tempHeadIdx);
+      if (branch.charsHead > tempHead) {
+        let text = temp.splice(0, branch.charsHead - tempHead).join('')
+        yield mkTextObj(text, tempStartIdx);
       }
-      temp.splice(0, branch.END.length);
-      tempHeadIdx = branch.startIdx + branch.END.length;
+      let END_charsLength = SymbolMap.get(branch.END).charsLength;
+      temp.splice(0, END_charsLength);
+      tempHead = branch.charsHead + END_charsLength;
+      tempStartIdx = branch.startIdx + branch.END.length;
       yield mkTextObj(branch.END, branch.startIdx, true);
     }
   }
-  yield mkTextObj(temp.join(''), tempHeadIdx);
+  yield mkTextObj(temp.join(''), tempStartIdx);
 }
 
 
