@@ -40,8 +40,8 @@ body {
 }
 
 @keyframes blink {
-  from { background-color: rgba(0, 0, 0, 0); }
-  to { background-color: rgba(0, 0, 0, .8); }
+  from { background-color: rgba(0, 0, 0, .8); }
+  to { background-color: rgba(0, 0, 0, 0); }
 }
 
 .tag { display: inline-block; }
@@ -67,7 +67,7 @@ body {
 }
 
 .tag.-SYMBOL { opacity: .5; }
-  
+
 .tag.-numsign {
   font-size: 2em;
   font-weight: 900;
@@ -98,7 +98,7 @@ body {
 .tag.-cjkdq, .tag.-cjkdq-start, .tag.-cjkdq-end {
   font-family: serif;
 }
-  
+
 .tag.-grave, .tag.-grave-start, .tag.-grave-end {
   font-family: monospace;
   font-size: inherit;
