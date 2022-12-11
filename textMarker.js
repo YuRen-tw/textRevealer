@@ -1,6 +1,5 @@
 function* addEndOf(iterable, end) {
-  for (let element of iterable)
-    yield element;
+  yield* iterable;
   yield end;
 }
 function* enumerate(iterable, start=0) {
@@ -11,177 +10,209 @@ function* enumerate(iterable, start=0) {
   }
 }
 
-const SymbolTrie = new Map();
-const SymbolMap = new Map();
-const MarkMap = new Map();
-
-function letSymbol(symbol) {
-  if (!SymbolMap.has(symbol)) {
-    let Trie = SymbolTrie;
-    let charsLength = 0;
-    for (let char of symbol) {
-      if (!Trie.has(char))
-        Trie.set(char, new Map());
-      Trie = Trie.get(char);
-      charsLength = charsLength + 1;
-    }
-    Trie.set('END', symbol);
-    
-    SymbolMap.set(symbol, {
-      isSymbol: true,
-      opening: false,
-      closing: false,
-      multiClosing: false,
-      alone: false,
-      charsLength: charsLength
-    });
+class SymbolManager {
+  constructor() {
+    this.trie = new Map();
+    this.dict = new Map();
   }
-  return SymbolMap.get(symbol);
-}
-function letMark(mark, symbol) {
-  if (!MarkMap.has(symbol))
-    MarkMap.set(symbol, {
-      mark: mark,
-      closedBy: []
-    });
-  return MarkMap.get(symbol);
-}
-function mkMarkOnly(mark, symbol) {
-  letSymbol(symbol).alone = true;
-  letMark(mark, symbol);
-}
-function mkMarkBetween(mark, opening, closing, multiClosing) {
-  if (closing === undefined)
-    closing = opening;
-  
-  letSymbol(opening).opening = true;
-  letSymbol(closing).closing = true;
-  if (multiClosing)
-    letSymbol(closing).multiClosing = true;
-  letMark(mark, opening).closedBy.push(closing);
+  take(symbol) {
+    if (!this.dict.has(symbol)) {
+      let [trie, charsLength] = this.trieAdd(symbol);
+      this.dict.set(symbol, {
+        opening: false,
+        closing: false,
+        alone: false,
+        raw: symbol,
+        view: symbol,
+        charsLength: charsLength
+      })
+      trie.set('END', this.dict.get(symbol));
+    }
+    return this.dict.get(symbol);
+  }
+  setView(symbol, view) {
+    this.take(symbol).view = view;
+  }
+  trieAdd(symbol) {
+    let trie = this.trie;
+    let charsLength, char;
+    for ([charsLength, char] of enumerate(symbol, 1))
+      trie = trie.get(char) || trie.set(char, new Map()).get(char);
+    trie.set('END', symbol);
+    return [trie, charsLength];
+  }
 }
 
-function mkTextObj(content, startIdx, isSymbol=false) {
+class MarkManager {
+  constructor() {
+    this.dict = new Map();
+    this.refresh();
+  }
+  refresh() {
+    this.list = [];
+    this.amount = new Map();
+  }
+  take(symbol, mark='-UNDEFINED') {
+    if (!this.dict.has(symbol))
+      this.dict.set(symbol, {
+        mark: mark,
+        closedBy: [],
+        consume: true
+      });
+    return this.dict.get(symbol);
+  }
+  getUnduplicatedList() {
+    return Array.from(this.amount.keys(), symbol => this.dict.get(symbol).mark);
+  }
+  open(symbol) {
+    let amount = this.amount.get(symbol) || 0;
+    this.amount.set(symbol, amount + 1);
+    this.list.push(symbol);
+  }
+  close(symbol) {
+    let notYetClosedMarks = [];
+    let closedMarks = [];
+    while (this.list.length) {
+      let opening = this.list.pop();
+      if (!this.take(opening).closedBy.includes(symbol)) {
+        notYetClosedMarks.unshift(opening);
+        continue;
+      }
+      this.amountDec(opening);
+      closedMarks.push(opening);
+      if (this.take(opening).consume)
+        break;
+    }
+    this.list = this.list.concat(notYetClosedMarks);
+    return closedMarks;
+  }
+  amountDec(symbol) {
+    let amount = this.amount.get(symbol) || 1;
+    this.amount.set(symbol, amount - 1);
+    if (amount === 1)
+      this.amount.delete(symbol);
+  }
+}
+
+class ContextManager {
+  constructor() {
+    this.Symbol = new SymbolManager();
+    this.Mark = new MarkManager();
+  }
+  setSymbolView(symbol, view) {
+    this.Symbol.setView(symbol, view);
+  }
+  addMarkOnly(mark, symbol) {
+    this.Symbol.take(symbol).alone = true;
+    this.Mark.take(symbol, mark);
+  }
+  addMarkBetween(mark, opening, closing=opening, consume=true) {
+    this.Symbol.take(opening).opening = true;
+    this.Symbol.take(closing).closing = true;
+    this.Mark.take(opening, mark).closedBy.push(closing);
+    if (!consume)
+      this.Mark.take(opening).consume = false;
+  }
+  addMarkAfter(mark, leading, closedBySpace=false) {
+    this.addMarkBetween(mark, leading, '\n', false);
+    if (closedBySpace)
+      this.addMarkBetween(mark, leading, ' ', false);
+  }
+}
+
+
+function mkTextObj(content, offset, isSymbol=false, view=content) {
   return {
     isSymbol: isSymbol,
-    content: content,
-    startIdx: startIdx,
-    endIdx: startIdx + content.length,
-    length: content.length
+    raw: content,
+    view: view,
+    offset: offset
   };
 }
-function* textObjGenerator(charGenerator) {
-  let temp = [];
-  let tempHead = 0;
-  let tempStartIdx = 0;
-  let strStartIdx = 0;
-  let branchList = [];
-  
-  charGenerator = addEndOf(charGenerator, '');
-  for (let [charIdx, char] of enumerate(charGenerator)) {
-    temp.push(char);
-    
-    if (SymbolTrie.has(char))
-      branchList.push({
-        currTrie: SymbolTrie,
-        END: undefined,
-        startIdx: strStartIdx,
-        charsHead: charIdx,
-        alive: true
-      });
-    strStartIdx = strStartIdx + char.length;
-    for (let [bIdx, branch] of enumerate(branchList)) {
-      if (!branch.alive) continue;
-      
-      if (branch.currTrie.has(char)) {
-        branch.currTrie = branch.currTrie.get(char);
-        if (branch.currTrie.has('END')) {
-          branch.END = branch.currTrie.get('END');
-          branchList.splice(bIdx + 1);
-        }
-      } else {
-        branch.alive = false;
-      }
+function newBranch(trie, index, offset) {
+  return {
+    currentTrie: trie,
+    END: undefined,
+    offset: offset,
+    index: index,
+    alive: true
+  };
+}
+function walkBranches(branchList, char) {
+  for (let [bIdx, branch] of enumerate(branchList)) {
+    if (!branch.alive) continue;
+    if (!branch.currentTrie.has(char)) {
+      branch.alive = false;
+      continue;
     }
-    
-    while (branchList.length && !branchList[0].alive) {
-      let branch = branchList.shift();
-      if (branch.END === undefined) continue;
-      if (branch.charsHead > tempHead) {
-        let text = temp.splice(0, branch.charsHead - tempHead).join('')
-        yield mkTextObj(text, tempStartIdx);
-      }
-      let END_charsLength = SymbolMap.get(branch.END).charsLength;
-      temp.splice(0, END_charsLength);
-      tempHead = branch.charsHead + END_charsLength;
-      tempStartIdx = branch.startIdx + branch.END.length;
-      yield mkTextObj(branch.END, branch.startIdx, true);
+    branch.currentTrie = branch.currentTrie.get(char);
+    if (branch.currentTrie.has('END')) {
+      branch.END = branch.currentTrie.get('END');
+      branchList.splice(bIdx + 1);  // remove the rest of the list
     }
   }
-  yield mkTextObj(temp.join(''), tempStartIdx);
+}
+function* checkBranches(branchList, buffer, index, offset) {
+  while (branchList.length && !branchList[0].alive) {
+    let branch = branchList.shift();
+    if (branch.END === undefined) continue;
+    if (branch.index > index) {
+      let text = buffer.splice(0, branch.index - index).join('')
+      yield mkTextObj(text, offset);
+    }
+    let symbolData = branch.END;
+    buffer.splice(0, symbolData.charsLength);
+    index = branch.index + symbolData.charsLength;
+    offset = branch.offset + symbolData.raw.length;
+    yield mkTextObj(symbolData.raw, branch.offset, true, symbolData.view);
+  }
+  return [index, offset];
+}
+function* textObjGenerator(trie, charGenerator) {
+  let branchList = [];
+  let buffer = [];
+  let index = 0;   // index of buffer[0] in the whole content ([...str])
+  let offset = 0;  // index of buffer[0] in the whole content (str)
+  let currOffset = 0;
+  charGenerator = addEndOf(charGenerator, '');
+  for (let [currIndex, char] of enumerate(charGenerator)) {
+    buffer.push(char);
+    if (trie.has(char))
+      branchList.push(newBranch(trie, currIndex, currOffset));
+    currOffset = currOffset + char.length;
+    walkBranches(branchList, char);
+    [index, offset] = yield* checkBranches(branchList, buffer, index, offset);
+  }
+  yield mkTextObj(buffer.join(''), offset);
 }
 
 
-function getMarkList(markAmount) {
-  let result = [];
-  for (let [opening, amount] of markAmount)
-      if (amount > 0)
-        result.push(MarkMap.get(opening).mark);
-  return result
-}
-function addMarkAmount(markAmount, opening, add) {
-  let amount = markAmount.get(opening) || 0;
-  if (add >= 0 || amount >= -add)
-    markAmount.set(opening, amount + add);
-  else
-    markAmount.set(opening, 0);
-}
-
-function mkTextMark(textObj, marks) {
-  textObj.marks = marks;
+function mkTextMark(textObj, markList) {
+  textObj.markList = markList;
   return textObj;
 }
-function* textMarkGenerator(charGenerator) {
-  let markAmount = new Map();
-  let markStack = [];
-  
-  for (let textObj of textObjGenerator(charGenerator)) {
-    if (textObj.isSymbol) {
-      let markList = [];
-      let done = false;
-      let symbolData = SymbolMap.get(textObj.content);
-      
-      if (symbolData.alone) {
-        markList.push(`${MarkMap.get(textObj.content).mark}`);
-      }
-      if (symbolData.closing) {
-        let closing = textObj.content;
-        let notYetClosedMarkStack = [];
-        while (!done && markStack.length > 0) {
-          let opening = markStack.pop();
-          if (MarkMap.get(opening).closedBy.includes(closing)) {
-            addMarkAmount(markAmount, opening, -1);
-            markList.push(`${MarkMap.get(opening).mark}-end`);
-            if (!symbolData.multiClosing)
-              done = true;
-          } else {
-            notYetClosedMarkStack.unshift(opening);
-          }
-        }
-        markStack = markStack.concat(notYetClosedMarkStack);
-        if (markList.length > 0)
-          done = true;
-      }
-      markList = markList.concat(getMarkList(markAmount));
-      if (!done && symbolData.opening) {
-        let opening = textObj.content;
-        markStack.push(opening);
-        addMarkAmount(markAmount, opening, 1);
-        markList.push(`${MarkMap.get(opening).mark}-start`);
-      }
-      yield mkTextMark(textObj, markList);
-    } else {
-      yield mkTextMark(textObj, getMarkList(markAmount));
+function* textMarkGenerator(Context, charGenerator) {
+  Context.Mark.refresh();
+  for (let textObj of textObjGenerator(Context.Symbol.trie, charGenerator)) {
+    if (!textObj.isSymbol) {
+      yield mkTextMark(textObj, Context.Mark.getUnduplicatedList());
+      continue;
     }
+    let markList = [];
+    let symbol = textObj.raw;
+    let symbolData = Context.Symbol.take(symbol);
+    if (symbolData.alone)
+      markList.push(`${Context.Mark.take(symbol).mark}`);
+    if (symbolData.closing) {
+      for (let opening of Context.Mark.close(symbol))
+        markList.push(`${Context.Mark.take(opening).mark}-end`);
+    }
+    let symbolUsed = markList.length > 0;
+    markList = markList.concat(Context.Mark.getUnduplicatedList());
+    if (!symbolUsed && symbolData.opening) {
+      Context.Mark.open(symbol);
+      markList.push(`${Context.Mark.take(symbol).mark}-start`);
+    }
+    yield mkTextMark(textObj, markList);
   }
 }
