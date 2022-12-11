@@ -5,11 +5,25 @@ function getTextArea() { return document.getElementById('textArea'); }
 function getWidth(element) { return element.clientWidth; }
 function getHeight(element) { return element.clientHeight; }
 
+const Context = new ContextManager();
+
+function setSymbolView(symbol, view) {
+  Context.setSymbolView(symbol, view);
+}
+function addMarkOnly(mark, symbol) {
+  Context.addMarkOnly(mark, symbol);
+}
+function addMarkBetween(mark, opening, closing=undefined) {
+  Context.addMarkBetween(mark, opening, closing);
+}
+function addMarkAfter(mark, leading, closedBySpace=false) {
+  Context.addMarkAfter(mark, leading, closedBySpace);
+}
 
 function putHTMLToReveal() {
   let text = getTextArea().value;
-  let HTML = [...spanStringGenerator(text)].join('');
-  getTextRevealer().innerHTML = HTML;
+  let spans = [...spanStringGenerator(textMarkGenerator(Context, text))];
+  getTextRevealer().innerHTML = spans.join('');
 }
 
 function mkCursorElement() {

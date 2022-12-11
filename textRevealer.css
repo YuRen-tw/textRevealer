@@ -68,11 +68,11 @@ body {
 
 .tag.-SYMBOL { opacity: .5; }
 
-.tag.-numsign {
+.tag.-numsign, .tag.-numsign-start {
   font-size: 2em;
   font-weight: 900;
 }
-.tag.-numsign2 {
+.tag.-numsign2, .tag.-numsign2-start {
   font-size: 1.5em;
   font-weight: 700;
 }
