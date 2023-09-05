@@ -119,18 +119,19 @@ class ContextManager {
 }
 
 
-function mkTextObj(content, offset, isSymbol=false, view=content) {
+function mkTextObj(content, offset, symbolId) {
   return {
-    isSymbol: isSymbol,
-    text: content,
-    view: view,
+    isSymbol: symbolId === undefined,
+    symbolId: symbolId,
+    raw: content,
+    view: content,
     offset: offset
   };
 }
 function newBranch(trie, index, offset) {
   return {
     currentNode: trie,
-    END: undefined,
+    achieved: undefined,
     offset: offset,
     currentText: '',
     index: index,
@@ -138,7 +139,7 @@ function newBranch(trie, index, offset) {
     alive: true
   };
 }
-function walkBranches(branchList, char, symbolDict) {
+function walkBranches(branchList, char) {
   for (let [bIdx, branch] of enumerate(branchList)) {
     if (!branch.alive) continue;
     if (!branch.currentNode.has(char)) {
@@ -149,9 +150,8 @@ function walkBranches(branchList, char, symbolDict) {
     branch.currentText += char;
     branch.currentCharsLength += 1;
     if (branch.currentNode.has('END')) {
-      branch.END = {
+      branch.achieved = {
         symbolId: branch.currentNode.get('END'),
-        data: symbolDict.get(branch.currentNode.get('END')),
         text: branch.currentText,
         charsLength: branch.currentCharsLength
       };
@@ -163,21 +163,17 @@ function walkBranches(branchList, char, symbolDict) {
 function* checkBranches(branchList, buffer, index, offset) {
   while (branchList.length && !branchList[0].alive) {
     let branch = branchList.shift();
-    if (branch.END === undefined) continue;
+    if (branch.achieved === undefined) continue;
     if (branch.index > index) {
-      let text = buffer.splice(0, branch.index - index).join('')
+      let text = buffer.splice(0, branch.index - index).join('');
       yield mkTextObj(text, offset);
     }
-    let symbolData = branch.END;
-    buffer.splice(0, symbolData.charsLength);
-    index = branch.index + symbolData.charsLength;
-    offset = branch.offset + symbolData.text.length;
-    if (symbolData.data.view)
-      yield mkTextObj(symbolData.text, branch.offset, true, symbolData.data.view);
-    else
-      yield mkTextObj(symbolData.text, branch.offset, true);
+    buffer.splice(0, branch.achieved.charsLength);
+    index = branch.index + branch.achieved.charsLength;
+    offset = branch.offset + branch.achieved.text.length;
+    yield mkTextObj(branch.achieved.text, branch.offset, branch.achieved.symbolId);
   }
-  return [branchList, index, offset];
+  return [branchList, buffer, index, offset];
 }
 function* textObjGenerator(symbolManager, charGenerator) {
   let branchList = [];
@@ -191,8 +187,8 @@ function* textObjGenerator(symbolManager, charGenerator) {
     if (symbolManager.trie.has(char))
       branchList.push(newBranch(symbolManager.trie, currIndex, currOffset));
     currOffset = currOffset + char.length;
-    branchList = walkBranches(branchList, char, symbolManager.dict);
-    [branchList, index, offset] = yield* checkBranches(branchList, buffer, index, offset);
+    branchList = walkBranches(branchList, char);
+    [branchList, buffer, index, offset] = yield* checkBranches(branchList, buffer, index, offset);
   }
   yield mkTextObj(buffer.join(''), offset);
 }
@@ -210,8 +206,10 @@ function* textMarkGenerator(ctxManager, charGenerator) {
       continue;
     }
     let markList = [];
-    let symbol = textObj.text;
+    let symbol = textObj.symbolId;
     let symbolData = ctxManager.Symbol.take(symbol);
+    if (symbolData.view)
+      textObj.view = symbolData.view;
     if (symbolData.alone)
       markList.push(`${ctxManager.Mark.take(symbol).mark}`);
     if (symbolData.closing) {
