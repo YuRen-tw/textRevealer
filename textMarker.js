@@ -17,7 +17,7 @@ class SymbolManager {
   }
   take(symbol) {
     if (!this.dict.has(symbol)) {
-      let [trie, charsLength] = this.trieAdd(symbol);
+      let [endNode, charsLength] = this.trieAdd(symbol);
       this.dict.set(symbol, {
         opening: false,
         closing: false,
@@ -26,7 +26,7 @@ class SymbolManager {
         view: symbol,
         charsLength: charsLength
       })
-      trie.set('END', this.dict.get(symbol));
+      endNode.set('END', this.dict.get(symbol));
     }
     return this.dict.get(symbol);
   }
@@ -131,7 +131,7 @@ function mkTextObj(content, offset, isSymbol=false, view=content) {
 }
 function newBranch(trie, index, offset) {
   return {
-    currentTrie: trie,
+    currentNode: trie,
     END: undefined,
     offset: offset,
     index: index,
@@ -141,13 +141,13 @@ function newBranch(trie, index, offset) {
 function walkBranches(branchList, char) {
   for (let [bIdx, branch] of enumerate(branchList)) {
     if (!branch.alive) continue;
-    if (!branch.currentTrie.has(char)) {
+    if (!branch.currentNode.has(char)) {
       branch.alive = false;
       continue;
     }
-    branch.currentTrie = branch.currentTrie.get(char);
-    if (branch.currentTrie.has('END')) {
-      branch.END = branch.currentTrie.get('END');
+    branch.currentNode = branch.currentNode.get(char);
+    if (branch.currentNode.has('END')) {
+      branch.END = branch.currentNode.get('END');
       branchList.splice(bIdx + 1);  // remove the rest of the list
     }
   }
@@ -191,27 +191,27 @@ function mkTextMark(textObj, markList) {
   textObj.markList = markList;
   return textObj;
 }
-function* textMarkGenerator(Context, charGenerator) {
-  Context.Mark.refresh();
-  for (let textObj of textObjGenerator(Context.Symbol.trie, charGenerator)) {
+function* textMarkGenerator(ctxManager, charGenerator) {
+  ctxManager.Mark.refresh();
+  for (let textObj of textObjGenerator(ctxManager.Symbol.trie, charGenerator)) {
     if (!textObj.isSymbol) {
-      yield mkTextMark(textObj, Context.Mark.getUnduplicatedList());
+      yield mkTextMark(textObj, ctxManager.Mark.getUnduplicatedList());
       continue;
     }
     let markList = [];
     let symbol = textObj.raw;
-    let symbolData = Context.Symbol.take(symbol);
+    let symbolData = ctxManager.Symbol.take(symbol);
     if (symbolData.alone)
-      markList.push(`${Context.Mark.take(symbol).mark}`);
+      markList.push(`${ctxManager.Mark.take(symbol).mark}`);
     if (symbolData.closing) {
-      for (let opening of Context.Mark.close(symbol))
-        markList.push(`${Context.Mark.take(opening).mark}-end`);
+      for (let opening of ctxManager.Mark.close(symbol))
+        markList.push(`${ctxManager.Mark.take(opening).mark}-end`);
     }
     let symbolUsed = markList.length > 0;
-    markList = markList.concat(Context.Mark.getUnduplicatedList());
+    markList = markList.concat(ctxManager.Mark.getUnduplicatedList());
     if (!symbolUsed && symbolData.opening) {
-      Context.Mark.open(symbol);
-      markList.push(`${Context.Mark.take(symbol).mark}-start`);
+      ctxManager.Mark.open(symbol);
+      markList.push(`${ctxManager.Mark.take(symbol).mark}-start`);
     }
     yield mkTextMark(textObj, markList);
   }
