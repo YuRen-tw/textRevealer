@@ -119,22 +119,22 @@ class ContextManager {
 }
 
 
-function mkTextObj(rawContent, offset, symbolId) {
+function mkTextObj(rawContent, startOffset, symbolId) {
   return {
     isSymbol: symbolId === undefined,
     symbolId: symbolId,
     raw: rawContent,
     view: rawContent,
-    offset: offset
+    startOffset: startOffset
   };
 }
-function newBranch(trie, index, offset) {
+function newBranch(trie, startIndex, startOffset) {
   return {
     currNode: trie,
     achieved: undefined,
-    offset: offset,
+    startOffset: startOffset,
     currText: '',
-    index: index,
+    startIndex: startIndex,
     currCharsLength: 0,
     inactive: false
   };
@@ -160,37 +160,39 @@ function walkBranches(branchList, char) {
   }
   return branchList;
 }
-function* checkBranches(branchList, buffer, index, offset) {
+function* checkBranches(branchList, buffer) {
   while (branchList.length && branchList[0].inactive) {
     let branch = branchList.shift();
     if (branch.achieved === undefined) continue;
-    if (branch.index > index) {
-      let text = buffer.splice(0, branch.index - index).join('');
-      yield mkTextObj(text, offset);
+    if (branch.startIndex > buffer.startIndex) {
+      let text = buffer.chars.splice(0, branch.startIndex - buffer.startIndex).join('');
+      yield mkTextObj(text, buffer.startOffset);
     }
-    buffer.splice(0, branch.achieved.charsLength);
-    index = branch.index + branch.achieved.charsLength;
-    offset = branch.offset + branch.achieved.text.length;
-    yield mkTextObj(branch.achieved.text, branch.offset, branch.achieved.symbolId);
+    buffer.chars.splice(0, branch.achieved.charsLength);
+    buffer.startIndex = branch.startIndex + branch.achieved.charsLength;
+    buffer.startOffset = branch.startOffset + branch.achieved.text.length;
+    yield mkTextObj(branch.achieved.text, branch.startOffset, branch.achieved.symbolId);
   }
-  return [branchList, buffer, index, offset];
+  return [branchList, buffer];
 }
 function* textObjGenerator(symbolManager, charGenerator) {
   let branchList = [];
-  let buffer = [];
-  let index = 0;   // index of buffer[0] in the whole content ([...str])
-  let offset = 0;  // index of buffer[0] in the whole content (str)
+  let buffer = {
+    chars: [],
+    startIndex: 0,  // index of buffer[0] in the whole content ([...str])
+    startOffset: 0  // index of buffer[0] in the whole content (str)
+  };
   let currOffset = 0;
   charGenerator = addEndOf(charGenerator, '');
   for (let [currIndex, char] of enumerate(charGenerator)) {
-    buffer.push(char);
+    buffer.chars.push(char);
     if (symbolManager.trie.has(char))
       branchList.push(newBranch(symbolManager.trie, currIndex, currOffset));
-    currOffset = currOffset + char.length;
     branchList = walkBranches(branchList, char);
-    [branchList, buffer, index, offset] = yield* checkBranches(branchList, buffer, index, offset);
+    [branchList, buffer] = yield* checkBranches(branchList, buffer);
+    currOffset = currOffset + char.length;
   }
-  yield mkTextObj(buffer.join(''), offset);
+  yield mkTextObj(buffer.chars.join(''), buffer.startOffset);
 }
 
 
