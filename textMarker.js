@@ -150,6 +150,7 @@ function walkBranches(branchList, char, symbolDict) {
       branchList.splice(bIdx + 1);  // remove the rest of the list
     }
   }
+  return branchList;
 }
 function* checkBranches(branchList, buffer, index, offset) {
   while (branchList.length && !branchList[0].alive) {
@@ -165,7 +166,7 @@ function* checkBranches(branchList, buffer, index, offset) {
     offset = branch.offset + symbolData.raw.length;
     yield mkTextObj(symbolData.raw, branch.offset, true, symbolData.view);
   }
-  return [index, offset];
+  return [branchList, index, offset];
 }
 function* textObjGenerator(symbolManager, charGenerator) {
   let branchList = [];
@@ -179,8 +180,8 @@ function* textObjGenerator(symbolManager, charGenerator) {
     if (symbolManager.trie.has(char))
       branchList.push(newBranch(symbolManager.trie, currIndex, currOffset));
     currOffset = currOffset + char.length;
-    walkBranches(branchList, char, symbolManager.dict);
-    [index, offset] = yield* checkBranches(branchList, buffer, index, offset);
+    branchList = walkBranches(branchList, char, symbolManager.dict);
+    [branchList, index, offset] = yield* checkBranches(branchList, buffer, index, offset);
   }
   yield mkTextObj(buffer.join(''), offset);
 }
