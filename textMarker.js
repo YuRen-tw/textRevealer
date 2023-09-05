@@ -119,49 +119,49 @@ class ContextManager {
 }
 
 
-function mkTextObj(content, offset, symbolId) {
+function mkTextObj(rawContent, offset, symbolId) {
   return {
     isSymbol: symbolId === undefined,
     symbolId: symbolId,
-    raw: content,
-    view: content,
+    raw: rawContent,
+    view: rawContent,
     offset: offset
   };
 }
 function newBranch(trie, index, offset) {
   return {
-    currentNode: trie,
+    currNode: trie,
     achieved: undefined,
     offset: offset,
-    currentText: '',
+    currText: '',
     index: index,
-    currentCharsLength: 0,
-    alive: true
+    currCharsLength: 0,
+    inactive: false
   };
 }
 function walkBranches(branchList, char) {
-  for (let [bIdx, branch] of enumerate(branchList)) {
-    if (!branch.alive) continue;
-    if (!branch.currentNode.has(char)) {
-      branch.alive = false;
+  for (let [branchIdx, branch] of enumerate(branchList)) {
+    if (branch.inactive) continue;
+    if (!branch.currNode.has(char)) {
+      branch.inactive = true;
       continue;
     }
-    branch.currentNode = branch.currentNode.get(char);
-    branch.currentText += char;
-    branch.currentCharsLength += 1;
-    if (branch.currentNode.has('END')) {
+    branch.currNode = branch.currNode.get(char);
+    branch.currText += char;
+    branch.currCharsLength += 1;
+    if (branch.currNode.has('END')) {
       branch.achieved = {
-        symbolId: branch.currentNode.get('END'),
-        text: branch.currentText,
-        charsLength: branch.currentCharsLength
+        symbolId: branch.currNode.get('END'),
+        text: branch.currText,
+        charsLength: branch.currCharsLength
       };
-      branchList.splice(bIdx + 1);  // remove the rest of the list
+      branchList.splice(branchIdx + 1);  // remove the rest of the list
     }
   }
   return branchList;
 }
 function* checkBranches(branchList, buffer, index, offset) {
-  while (branchList.length && !branchList[0].alive) {
+  while (branchList.length && branchList[0].inactive) {
     let branch = branchList.shift();
     if (branch.achieved === undefined) continue;
     if (branch.index > index) {
