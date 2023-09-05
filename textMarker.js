@@ -22,8 +22,7 @@ class SymbolManager {
         opening: false,
         closing: false,
         alone: false,
-        raw: symbol,
-        view: symbol,
+        view: undefined,
         charsLength: charsLength
       })
     }
@@ -123,7 +122,7 @@ class ContextManager {
 function mkTextObj(content, offset, isSymbol=false, view=content) {
   return {
     isSymbol: isSymbol,
-    raw: content,
+    text: content,
     view: view,
     offset: offset
   };
@@ -133,7 +132,9 @@ function newBranch(trie, index, offset) {
     currentNode: trie,
     END: undefined,
     offset: offset,
+    currentText: '',
     index: index,
+    currentCharsLength: 0,
     alive: true
   };
 }
@@ -145,8 +146,15 @@ function walkBranches(branchList, char, symbolDict) {
       continue;
     }
     branch.currentNode = branch.currentNode.get(char);
+    branch.currentText += char;
+    branch.currentCharsLength += 1;
     if (branch.currentNode.has('END')) {
-      branch.END = symbolDict.get(branch.currentNode.get('END'));
+      branch.END = {
+        symbolId: branch.currentNode.get('END'),
+        data: symbolDict.get(branch.currentNode.get('END')),
+        text: branch.currentText,
+        charsLength: branch.currentCharsLength
+      };
       branchList.splice(bIdx + 1);  // remove the rest of the list
     }
   }
@@ -163,8 +171,11 @@ function* checkBranches(branchList, buffer, index, offset) {
     let symbolData = branch.END;
     buffer.splice(0, symbolData.charsLength);
     index = branch.index + symbolData.charsLength;
-    offset = branch.offset + symbolData.raw.length;
-    yield mkTextObj(symbolData.raw, branch.offset, true, symbolData.view);
+    offset = branch.offset + symbolData.text.length;
+    if (symbolData.data.view)
+      yield mkTextObj(symbolData.text, branch.offset, true, symbolData.data.view);
+    else
+      yield mkTextObj(symbolData.text, branch.offset, true);
   }
   return [branchList, index, offset];
 }
@@ -199,7 +210,7 @@ function* textMarkGenerator(ctxManager, charGenerator) {
       continue;
     }
     let markList = [];
-    let symbol = textObj.raw;
+    let symbol = textObj.text;
     let symbolData = ctxManager.Symbol.take(symbol);
     if (symbolData.alone)
       markList.push(`${ctxManager.Mark.take(symbol).mark}`);
