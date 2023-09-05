@@ -17,13 +17,12 @@ class SymbolManager {
   }
   take(symbol) {
     if (!this.dict.has(symbol)) {
-      let charsLength = this.trieAdd(symbol);
+      this.trieAdd(symbol);
       this.dict.set(symbol, {
         opening: false,
         closing: false,
         alone: false,
-        view: undefined,
-        charsLength: charsLength
+        view: undefined
       })
     }
     return this.dict.get(symbol);
@@ -33,11 +32,9 @@ class SymbolManager {
   }
   trieAdd(symbol) {
     let trie = this.trie;
-    let charsLength, char;
-    for ([charsLength, char] of enumerate(symbol, 1))
+    for (let char of symbol)
       trie = trie.get(char) || trie.set(char, new Map()).get(char);
     trie.set('END', symbol);
-    return charsLength;
   }
 }
 
