@@ -118,7 +118,7 @@ class ContextManager {
 
 function mkTextObj(rawContent, startOffset, symbolId) {
   return {
-    isSymbol: symbolId === undefined,
+    isSymbol: symbolId !== undefined,
     symbolId: symbolId,
     raw: rawContent,
     view: rawContent,
@@ -176,8 +176,8 @@ function* textObjGenerator(symbolManager, charGenerator) {
   let branchList = [];
   let buffer = {
     chars: [],
-    startIndex: 0,  // index of buffer[0] in the whole content ([...str])
-    startOffset: 0  // index of buffer[0] in the whole content (str)
+    startIndex: 0,  // index of chars[0] in the whole content ([...str])
+    startOffset: 0  // index of chars[0] in the whole content (str)
   };
   let currOffset = 0;
   charGenerator = addEndOf(charGenerator, '');
@@ -189,7 +189,9 @@ function* textObjGenerator(symbolManager, charGenerator) {
     [branchList, buffer] = yield* checkBranches(branchList, buffer);
     currOffset = currOffset + char.length;
   }
-  yield mkTextObj(buffer.chars.join(''), buffer.startOffset);
+  let remainder = buffer.chars.join('');
+  if (remainder.length > 0)
+    yield mkTextObj(remainder, buffer.startOffset);
 }
 
 
