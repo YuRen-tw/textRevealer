@@ -137,12 +137,16 @@ function newBranch(trie, startIndex, startOffset) {
   };
 }
 function walkBranches(branchList, char) {
-  for (let [branchIdx, branch] of enumerate(branchList)) {
-    if (branch.inactive) continue;
-    if (!branch.currNode.has(char)) {
+  let nextBranchList = [];
+  for (let branch of branchList) {
+    if (!branch.currNode.has(char))
       branch.inactive = true;
+    if (branch.inactive) {
+      if (branch.achieved !== undefined)
+      nextBranchList.push(branch);
       continue;
     }
+    nextBranchList.push(branch);
     branch.currNode = branch.currNode.get(char);
     branch.currText += char;
     branch.currCharsLength += 1;
@@ -152,10 +156,10 @@ function walkBranches(branchList, char) {
         text: branch.currText,
         charsLength: branch.currCharsLength
       };
-      branchList.splice(branchIdx + 1);  // remove the rest of the list
+      break;  // we don't need the branches in the rest of the list
     }
   }
-  return branchList;
+  return nextBranchList;
 }
 function* checkBranches(branchList, buffer) {
   while (branchList.length && branchList[0].inactive) {
