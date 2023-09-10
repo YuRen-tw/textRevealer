@@ -1,14 +1,32 @@
-function* addEndOf(iterable, end) {
-  yield* iterable;
-  yield end;
-}
-function* enumerate(iterable, start=0) {
-  let idx = start;
-  for (let element of iterable) {
-    yield [idx, element];
-    idx += 1;
+class StringDimension {
+  constructor(logical=0, physical=0) {
+    this.logical = logical;  // [...string].length
+    this.physical = physical;  // string.length
+  }
+  static plus(x, y) {
+    return new StringDimension(
+      x.logical + y.logical,
+      x.physical + y.physical
+    );
+  }
+  static addChar(x, char) {
+    return new StringDimension(
+      x.logical + 1,
+      x.physical + char.length
+    );
   }
 }
+
+function* charIterator(string, end=true) {
+  let index = new StringDimension();
+  for (let char of string) {
+    yield [index, char];
+    index = StringDimension.addChar(index, char);
+  }
+  if (end)
+    yield [index, ''];
+}
+
 
 class SymbolManager {
   constructor() {
@@ -116,23 +134,22 @@ class ContextManager {
 }
 
 
-function mkTextObj(rawContent, startOffset, symbolId) {
+function mkTextObj(rawContent, start, symbolId) {
   return {
     isSymbol: symbolId !== undefined,
     symbolId: symbolId,
     raw: rawContent,
     view: rawContent,
-    startOffset: startOffset
+    start: start
   };
 }
-function newBranch(trie, startIndex, startOffset) {
+function newBranch(trie, start) {
   return {
     currNode: trie,
     achieved: undefined,
-    startOffset: startOffset,
+    start: start,
     currText: '',
-    startIndex: startIndex,
-    currCharsLength: 0,
+    currTextLength: new StringDimension(),
     inactive: false
   };
 }
@@ -143,18 +160,18 @@ function walkBranches(branchList, char) {
       branch.inactive = true;
     if (branch.inactive) {
       if (branch.achieved !== undefined)
-      nextBranchList.push(branch);
+        nextBranchList.push(branch);
       continue;
     }
     nextBranchList.push(branch);
     branch.currNode = branch.currNode.get(char);
     branch.currText += char;
-    branch.currCharsLength += 1;
+    branch.currTextLength = StringDimension.addChar(branch.currTextLength, char);
     if (branch.currNode.has('END')) {
       branch.achieved = {
         symbolId: branch.currNode.get('END'),
         text: branch.currText,
-        charsLength: branch.currCharsLength
+        textLength: branch.currTextLength
       };
       break;  // we don't need the branches in the rest of the list
     }
@@ -164,48 +181,44 @@ function walkBranches(branchList, char) {
 function* checkBranches(branchList, buffer) {
   while (branchList.length && branchList[0].inactive) {
     let branch = branchList.shift();
-    if (branch.achieved === undefined) continue;
-    if (branch.startIndex > buffer.startIndex) {
-      let text = buffer.chars.splice(0, branch.startIndex - buffer.startIndex).join('');
-      yield mkTextObj(text, buffer.startOffset);
+    let prefixLength = branch.start.logical - buffer.start.logical;
+    if (prefixLength > 0) {
+      let text = buffer.chars.splice(0, prefixLength).join('');
+      yield mkTextObj(text, buffer.start);
     }
-    buffer.chars.splice(0, branch.achieved.charsLength);
-    buffer.startIndex = branch.startIndex + branch.achieved.charsLength;
-    buffer.startOffset = branch.startOffset + branch.achieved.text.length;
-    yield mkTextObj(branch.achieved.text, branch.startOffset, branch.achieved.symbolId);
+    buffer.chars.splice(0, branch.achieved.textLength.logical);
+    buffer.start = StringDimension.plus(branch.start, branch.achieved.textLength);
+    yield mkTextObj(branch.achieved.text, branch.start, branch.achieved.symbolId);
   }
   return [branchList, buffer];
 }
-function* textObjGenerator(symbolManager, charGenerator) {
+function* textObjGenerator(symbolManager, wholeContent) {
   let branchList = [];
   let buffer = {
     chars: [],
-    startIndex: 0,  // index of chars[0] in the whole content ([...str])
-    startOffset: 0  // index of chars[0] in the whole content (str)
+    start: new StringDimension(),
   };
-  let currOffset = 0;
-  charGenerator = addEndOf(charGenerator, '');
-  for (let [currIndex, char] of enumerate(charGenerator)) {
+  for (let [index, char] of charIterator(wholeContent)) {
     buffer.chars.push(char);
     if (symbolManager.trie.has(char))
-      branchList.push(newBranch(symbolManager.trie, currIndex, currOffset));
+      branchList.push(newBranch(symbolManager.trie, index));
     branchList = walkBranches(branchList, char);
     [branchList, buffer] = yield* checkBranches(branchList, buffer);
-    currOffset = currOffset + char.length;
   }
   let remainder = buffer.chars.join('');
   if (remainder.length > 0)
-    yield mkTextObj(remainder, buffer.startOffset);
+    yield mkTextObj(remainder, buffer.start);
 }
 
 
 function mkTextMark(textObj, markList) {
   textObj.markList = markList;
+  textObj.startOffset = textObj.start.physical;
   return textObj;
 }
-function* textMarkGenerator(ctxManager, charGenerator) {
+function* textMarkGenerator(ctxManager, wholeContent) {
   ctxManager.Mark.refresh();
-  for (let textObj of textObjGenerator(ctxManager.Symbol, charGenerator)) {
+  for (let textObj of textObjGenerator(ctxManager.Symbol, wholeContent)) {
     if (!textObj.isSymbol) {
       yield mkTextMark(textObj, ctxManager.Mark.getUnduplicatedList());
       continue;
