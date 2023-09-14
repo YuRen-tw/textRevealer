@@ -5,24 +5,24 @@ function getTextArea() { return document.getElementById('textArea'); }
 function getWidth(element) { return element.clientWidth; }
 function getHeight(element) { return element.clientHeight; }
 
-const Context = new ContextManager();
+const ctxManager = new ContextManager();
 
 function setSymbolView(symbol, view) {
-  Context.setSymbolView(symbol, view);
+  ctxManager.setSymbolView(symbol, view);
 }
 function addMarkOnly(mark, symbol) {
-  Context.addMarkOnly(mark, symbol);
+  ctxManager.addMarkOnly(mark, symbol);
 }
 function addMarkBetween(mark, opening, closing=undefined) {
-  Context.addMarkBetween(mark, opening, closing);
+  ctxManager.addMarkBetween(mark, opening, closing);
 }
 function addMarkAfter(mark, leading, closedBySpace=false) {
-  Context.addMarkAfter(mark, leading, closedBySpace);
+  ctxManager.addMarkAfter(mark, leading, closedBySpace);
 }
 
 function putHTMLToReveal() {
   let text = getTextArea().value;
-  let spans = [...spanStringGenerator(textMarkGenerator(Context, text))];
+  let spans = [...spanStringGenerator(textMarkGenerator(ctxManager, text))];
   getTextRevealer().innerHTML = spans.join('');
 }
 
@@ -137,4 +137,3 @@ window.onload = function () {
   getTextArea().focus();
   reveal();
 }
-

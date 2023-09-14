@@ -21,8 +21,8 @@ function toHTML(str) {
 function mkSpanStr(textMark, classList=[]) {
   let inner = textMark.view;
   let classString = `class="${classList.join(' ')}"`;
-  let data = (`data-start="${textMark.offset}" ` +
-              `data-end="${textMark.offset + textMark.raw.length}" ` +
+  let data = (`data-start="${textMark.startOffset}" ` +
+              `data-end="${textMark.startOffset + textMark.raw.length}" ` +
               `data-scale="${inner.length / textMark.raw.length}"` +
               `data-content="${toHTML(inner.replace('\n', '\\n'))}"`);
   return `<span ${classString} ${data}>${toHTML(inner)}</span>`;
@@ -36,4 +36,3 @@ function* spanStringGenerator(textMarkGenerator) {
     yield mkSpanStr(textMark, classList);
   }
 }
-
