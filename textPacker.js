@@ -9,6 +9,41 @@ function getHTMLClass(type) {
   return HTMLClass.get(type) || '';
 }
 
+class TextPack {
+  constructor(viewContent='', rawContent='', start=0, markList=[]) {
+    this.viewContent = viewContent;
+    this.start = start;
+    this.end = start + rawContent.length;
+    this.rawContent = rawContent;
+    this.scale = viewContent.length / rawContent.length;
+    this.markList = markList;
+  }
+  reveal(mkElement, setData, setClassList, strNormalizer) {
+    let elem = mkElement(strNormalizer(this.viewContent));
+    setData(elem, 'start', this.start);
+    setData(elem, 'end', this.end);
+    setData(elem, 'scale', this.scale);
+    setData(elem, 'content', strNormalizer(this.viewContent.replace('\n', '\\n')));
+    setClassList(elem, this.markList);
+    return elem;
+  }
+  split() {}
+}
+function* textPackGenerator(textMarkGenerator) {
+  for (let textMark of textMarkGenerator) {
+    let markList = [
+      getHTMLClass('INIT'),
+      getHTMLClass(textMark.isSymbol ? 'SYMBOL' : 'TEXT')
+    ].concat(textMark.markList);
+    yield new TextPack(
+      textMark.view,
+      textMark.raw,
+      textMark.startOffset,
+      markList
+    );
+  }
+}
+
 function toHTML(str) {
   return (
     str
@@ -18,22 +53,21 @@ function toHTML(str) {
     .replace(/"/g, '&quot;')
   );
 }
-function mkSpanStr(textMark, classList=[]) {
-  let inner = textMark.view;
-  let classString = `class="${classList.join(' ')}"`;
-  let data = (`data-start="${textMark.startOffset}" ` +
-              `data-end="${textMark.startOffset + textMark.raw.length}" ` +
-              `data-scale="${inner.length / textMark.raw.length}"` +
-              `data-content="${toHTML(inner.replace('\n', '\\n'))}"`);
-  return `<span ${classString} ${data}>${toHTML(inner)}</span>`;
-}
-function* spanStringGenerator(textMarkGenerator) {
-  for (let textMark of textMarkGenerator) {
-    let classList = [
-      getHTMLClass('INIT'),
-      getHTMLClass(textMark.isSymbol ? 'SYMBOL' : 'TEXT')
-    ].concat(textMark.markList);
-    yield mkSpanStr(textMark, classList);
+function* spanElementGenerator(textMarkGenerator) {
+  for (let textPack of textPackGenerator(textMarkGenerator)) {
+    yield textPack.reveal(
+      (content) => {
+        let elem = document.createElement('span');
+        elem.textContent = content;
+        return elem;
+      },
+      (elem, key, value) => {
+        elem.dataset[key] = value;
+      },
+      (elem, classList) => {
+        elem.classList.add(...classList);
+      },
+      toHTML
+    );
   }
 }
-

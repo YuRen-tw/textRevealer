@@ -22,8 +22,11 @@ function addMarkAfter(mark, leading, closedBySpace=false) {
 
 function putHTMLToReveal() {
   let text = getTextArea().value;
-  let spans = [...spanStringGenerator(textMarkGenerator(ctxManager, text))];
-  getTextRevealer().innerHTML = spans.join('');
+  let TextRevealer = getTextRevealer();
+  TextRevealer.innerHTML = '';
+  for (let span of spanElementGenerator(textMarkGenerator(ctxManager, text))) {
+    TextRevealer.appendChild(span);
+  }
 }
 
 function mkCursorElement() {
