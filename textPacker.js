@@ -1,12 +1,12 @@
-const HTMLClass = new Map([
+const DefaultClass = new Map([
   ['INIT', 'tag'],
   ['TEXT', '-TEXT'],
   ['SYMBOL', '-SYMBOL'],
   ['CURSOR', '-CURSOR'],
   ['SELECT', '-SELECT'],
 ]);
-function getHTMLClass(type) {
-  return HTMLClass.get(type) || '';
+function getDefaultClass(type) {
+  return DefaultClass.get(type) || '';
 }
 
 class TextPack {
@@ -18,22 +18,13 @@ class TextPack {
     this.scale = viewContent.length / rawContent.length;
     this.markList = markList;
   }
-  reveal(mkElement, setData, setClassList, strNormalizer) {
-    let elem = mkElement(strNormalizer(this.viewContent));
-    setData(elem, 'start', this.start);
-    setData(elem, 'end', this.end);
-    setData(elem, 'scale', this.scale);
-    setData(elem, 'content', strNormalizer(this.viewContent.replace('\n', '\\n')));
-    setClassList(elem, this.markList);
-    return elem;
-  }
   split() {}
 }
 function* textPackGenerator(textMarkGenerator) {
   for (let textMark of textMarkGenerator) {
     let markList = [
-      getHTMLClass('INIT'),
-      getHTMLClass(textMark.isSymbol ? 'SYMBOL' : 'TEXT')
+      getDefaultClass('INIT'),
+      getDefaultClass(textMark.isSymbol ? 'SYMBOL' : 'TEXT')
     ].concat(textMark.markList);
     yield new TextPack(
       textMark.view,
@@ -44,30 +35,18 @@ function* textPackGenerator(textMarkGenerator) {
   }
 }
 
-function toHTML(str) {
-  return (
-    str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-  );
+function mkSpan(textPack) {
+  let span = document.createElement('span');
+  span.textContent = textPack.viewContent;
+  span.dataset['start'] = textPack.start;
+  span.dataset['end'] = textPack.end;
+  span.dataset['scale'] = textPack.scale;
+  span.dataset['content'] = textPack.viewContent.replace('\n', '\\n');
+  span.classList.add(...textPack.markList);
+  return span;
 }
 function* spanElementGenerator(textMarkGenerator) {
   for (let textPack of textPackGenerator(textMarkGenerator)) {
-    yield textPack.reveal(
-      (content) => {
-        let elem = document.createElement('span');
-        elem.textContent = content;
-        return elem;
-      },
-      (elem, key, value) => {
-        elem.dataset[key] = value;
-      },
-      (elem, classList) => {
-        elem.classList.add(...classList);
-      },
-      toHTML
-    );
+    yield mkSpan(textPack);
   }
 }
