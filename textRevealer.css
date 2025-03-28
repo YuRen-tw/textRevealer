@@ -40,12 +40,10 @@ body {
 }
 
 @keyframes blink {
-  from { background-color: rgba(0, 0, 0, .8); }
-  to { background-color: rgba(0, 0, 0, 0); }
+  from { opacity: .8; }
+  to { opacity: 0; }
 }
 
-.tag { display: inline-block; }
-.tag[data-content="\\n"] { display: inline; }
 #textRevealer::before, #textRevealer::after,
 .tag[data-content="\\n"]::before, .tag[data-content="\\n"]::after {
   content: "";
@@ -59,6 +57,7 @@ body {
   .tag.-CURSOR::before {
     content: '';
     padding: 0 2px;
+    background-color: currentColor;
     animation: blink 600ms ease-in-out infinite alternate both;
   }
 .tag.-SELECT {
